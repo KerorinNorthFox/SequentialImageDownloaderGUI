@@ -1,8 +1,8 @@
 ﻿using MangaDownloader.Models;
+using MangaDownloader.Models.EventSources;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,20 +14,20 @@ namespace MangaDownloader.ViewModels
     {
         public InputUrlViewModel InputUrlViewModel { get; }
 
-        public UrlListViewModel UrlListViewModel { get; }
+        public UrlListViewModel UrlListViewModel { get; } = new UrlListViewModel();
 
         private ImageDownloader _imageDownloader = new ImageDownloader();
 
         private ProgressEventSource _progress;
 
-        public PrepareAreaViewModel(ProgressEventSource source)
+        public PrepareAreaViewModel(ProgressEventSource progressSource)
         {
-            UrlListViewModel = new UrlListViewModel();
-            InputUrlViewModel = new InputUrlViewModel(UrlListViewModel);
+            _progress = progressSource;
+
+            var source = new UrlListEventSource().Subscribe(UrlListViewModel.AddUrlToList);
+            InputUrlViewModel = new InputUrlViewModel(source);
 
             StartDownloadingCommand = ReactiveCommand.CreateFromTask(_startDownloading);
-
-            _progress = source;
         }
 
         private bool _isDownloading = false;
@@ -47,6 +47,7 @@ namespace MangaDownloader.ViewModels
             var urlList = UrlListViewModel.UrlList;
             if (urlList.Count <= 0)
             {
+                _changeDownloadState();
                 return;
             }
 
