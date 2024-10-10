@@ -21,7 +21,9 @@ namespace MangaDownloader.ViewModels
                 new DownloadInfoEventSource().Subscribe(
                     DownloadingInfoViewModel.SetTotalUrlNumber,
                     DownloadingInfoViewModel.SetCurrentUrl,
-                    DownloadingInfoViewModel.ForwardCurrentUrlIndex
+                    DownloadingInfoViewModel.ForwardCurrentUrlIndex,
+                    DownloadingInfoViewModel.SetTotalImageUrlNumber,
+                    DownloadingInfoViewModel.ForwardCurrentImageUrlIndex
                     )
                 );
             _currentPage = PrepareAreaViewModel;

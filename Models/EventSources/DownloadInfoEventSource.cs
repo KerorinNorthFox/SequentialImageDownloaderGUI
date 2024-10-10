@@ -8,13 +8,19 @@ namespace MangaDownloader.Models.EventSources
 
         private event Action<Uri>? _setCurrentUrlEvent;
 
-        private event Action? _forwardCurrentIndexEvent;
+        private event Action? _forwardCurrentUrlIndexEvent;
 
-        public DownloadInfoEventSource Subscribe(Action<int> setTotalHandler, Action<Uri> currentUriHandler, Action forwardHandler)
+        private event Action<int>? _setTotalImageUrlNumberEvent;
+
+        private event Action? _forwardCurrentImageUrlIndexEvent;
+
+        public DownloadInfoEventSource Subscribe(Action<int> setTotalHandler, Action<Uri> currentUriHandler, Action forwardHandler, Action<int> setTotalImageHandler, Action forwardImageHandler)
         {
             _setTotalUrlNumberEvent += setTotalHandler;
             _setCurrentUrlEvent += currentUriHandler;
-            _forwardCurrentIndexEvent += forwardHandler;
+            _forwardCurrentUrlIndexEvent += forwardHandler;
+            _setTotalImageUrlNumberEvent += setTotalImageHandler;
+            _forwardCurrentImageUrlIndexEvent += forwardImageHandler;
             return this;
         }
 
@@ -27,10 +33,19 @@ namespace MangaDownloader.Models.EventSources
             _setCurrentUrlEvent?.Invoke(uri);
         }
 
-        public void OnForwardCurrentIndex()
+        public void OnForwardCurrentUrlIndex()
         {
-            _forwardCurrentIndexEvent?.Invoke();
+            _forwardCurrentUrlIndexEvent?.Invoke();
         }
 
+        public void OnSetTotalImageUrlNumber(int total)
+        {
+            _setTotalImageUrlNumberEvent?.Invoke(total);
+        }
+
+        public void OnForwardCurrentImageUrlIndex()
+        {
+            _forwardCurrentImageUrlIndexEvent?.Invoke();
+        }
     }
 }

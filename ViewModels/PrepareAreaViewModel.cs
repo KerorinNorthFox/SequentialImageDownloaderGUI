@@ -78,8 +78,9 @@ namespace MangaDownloader.ViewModels
                 currentPageUriIndex = 0;
                 foreach (var imageUris in imageUrisList)
                 {
-                    _downloadInfo.OnForwardCurrentIndex();
+                    _downloadInfo.OnForwardCurrentUrlIndex();
                     _downloadInfo.OnSetCurrentUrl(urlList[currentPageUriIndex]);
+                    _downloadInfo.OnSetTotalImageUrlNumber(imageUris.Count);
                     // TODO:configから画像保存先を設定できるようにする
                     // 画像保存ボタンを別に作ってそこでディレクトリ作成してもいいかも？
                     // ・ページネーションを実装してUrlごとに画像表示領域を作る
@@ -94,6 +95,7 @@ namespace MangaDownloader.ViewModels
                         var imagePath = Path.Combine(saveDirPath, $"{imageIndex}.jpg");
                         imageIndex++;
                         _progress.OnUpdateProgress(1);
+                        _downloadInfo.OnForwardCurrentImageUrlIndex();
 
                         if (File.Exists(imagePath))
                         {

@@ -3,37 +3,103 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:vm="using:MangaDownloader.ViewModels"
+			 xmlns:conv="using:MangaDownloader.Converter"
              mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="500"
              x:Class="MangaDownloader.Views.DownloadingInfoView"
 			 x:DataType="vm:DownloadingInfoViewModel"
 			 >
+	<UserControl.Resources>
+		<conv:IndexConverter x:Key="IndexConverter" />
+	</UserControl.Resources>
 	<Design.DataContext>
 		<vm:DownloadingInfoViewModel />
 	</Design.DataContext>
 	
 	<Border Padding="10">
 		<Grid
-			RowDefinitions="Auto,Auto"
-			ColumnDefinitions="Auto,*"
+			RowDefinitions="Auto,5,*"
+			ColumnDefinitions="10,*"
 			>
 			<Label
 				Grid.Row="0"
-				Grid.ColumnSpan="3"
+				Grid.ColumnSpan="2"
 				>
 				Downloading Info
 			</Label>
-			<TextBlock
-				Grid.Row="1"
-				Grid.Column="0"
-				Padding="20,0"
-				>
-				URL :
-			</TextBlock>
-			<TextBlock
+			<Grid
 				Grid.Row="2"
 				Grid.Column="1"
-				Text="{Binding DownloadingUrl}"
-				/>
+				RowDefinitions="Auto,Auto,Auto"
+				ColumnDefinitions="Auto,10,*"
+				>
+				<TextBlock
+					Grid.Row="0"
+					Grid.Column="0"
+					>
+					Index
+				</TextBlock>
+				<TextBlock
+					Grid.Row="0"
+					Grid.Column="1"
+					TextAlignment="Center"
+					>
+					:
+				</TextBlock>
+				<TextBlock
+					Grid.Row="0"
+					Grid.Column="2"
+					>
+					<TextBlock.Text>
+						<MultiBinding Converter="{StaticResource IndexConverter}">
+							<Binding Path="CurrentUrlIndex"/>
+							<Binding Path="TotalUrlNumber"/>
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
+				<TextBlock
+					Grid.Row="1"
+					Grid.Column="0"
+					>
+					URL
+				</TextBlock>
+				<TextBlock
+					Grid.Row="1"
+					Grid.Column="1"
+					TextAlignment="Center"
+					>
+					:
+				</TextBlock>
+				<TextBlock
+					Grid.Row="1"
+					Grid.Column="2"
+					TextWrapping="WrapWithOverflow"
+					Text="{Binding DownloadingUrl}"
+					/>
+				<TextBlock
+					Grid.Row="2"
+					Grid.Column="0"
+					>
+					Image
+				</TextBlock>
+				<TextBlock
+					Grid.Row="2"
+					Grid.Column="1"
+					TextAlignment="Center"
+					>
+					:
+				</TextBlock>
+				<TextBlock
+					Grid.Row="3"
+					Grid.Column="2"
+					>
+					<TextBlock.Text>
+						<MultiBinding Converter="{StaticResource IndexConverter}">
+							<Binding Path="CurrentImageUrlIndex"/>
+							<Binding Path="TotalImageUrlNumber"/>
+						</MultiBinding>
+					</TextBlock.Text>
+				</TextBlock>
+			</Grid>
 		</Grid>
 	</Border>
 </UserControl>
