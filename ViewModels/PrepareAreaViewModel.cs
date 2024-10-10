@@ -20,12 +20,16 @@ namespace MangaDownloader.ViewModels
 
         private ProgressEventSource _progress;
 
-        public PrepareAreaViewModel(ProgressEventSource progressSource)
-        {
-            _progress = progressSource;
+        private DownloadInfoEventSource _downloadInfo;
 
-            var source = new UrlListEventSource().Subscribe(UrlListViewModel.AddUrlToList);
-            InputUrlViewModel = new InputUrlViewModel(source);
+        public PrepareAreaViewModel(ProgressEventSource progress, DownloadInfoEventSource downloadInfo)
+        {
+            _progress = progress;
+            _downloadInfo = downloadInfo;
+
+            InputUrlViewModel = new InputUrlViewModel(
+                new UrlListEventSource().Subscribe(UrlListViewModel.AddUrlToList)
+                );
 
             StartDownloadingCommand = ReactiveCommand.CreateFromTask(_startDownloading);
         }
@@ -35,21 +39,20 @@ namespace MangaDownloader.ViewModels
         public bool IsDownloading
         {
             get => _isDownloading;
-            set => this.RaiseAndSetIfChanged(ref _isDownloading, value);  
+            set => this.RaiseAndSetIfChanged(ref _isDownloading, value);
         }
 
         public ICommand StartDownloadingCommand { get; }
 
         private async Task _startDownloading()
         {
-            _changeDownloadState();
-
             var urlList = UrlListViewModel.UrlList;
             if (urlList.Count <= 0)
             {
-                _changeDownloadState();
                 return;
             }
+
+            _changeDownloadState();
 
             List<List<Uri>> imageUrisList = new List<List<Uri>>(); // ダウンロードする画像の二次元リスト
             List<int> failedPageUriIndex = new List<int>(); // DL失敗したページのインデックス
@@ -59,6 +62,7 @@ namespace MangaDownloader.ViewModels
             try
             {
                 _progress.OnSetMaxProgress(urlList.Count);
+                _downloadInfo.OnSetTotalUrlNumber(urlList.Count);
                 foreach (var url in urlList)
                 {
                     var imageUris = await _imageDownloader.GetSequentialImagesUris(url);
@@ -74,7 +78,12 @@ namespace MangaDownloader.ViewModels
                 currentPageUriIndex = 0;
                 foreach (var imageUris in imageUrisList)
                 {
+                    _downloadInfo.OnForwardCurrentIndex();
+                    _downloadInfo.OnSetCurrentUrl(urlList[currentPageUriIndex]);
                     // TODO:configから画像保存先を設定できるようにする
+                    // 画像保存ボタンを別に作ってそこでディレクトリ作成してもいいかも？
+                    // ・ページネーションを実装してUrlごとに画像表示領域を作る
+                    // ・画像はチェックボックスで保存に含めるか
                     var baseDir = @"C:\Images";
                     var saveDirPath = ImageDownloader.GenerateSaveDirPathFromUri(baseDir, urlList[currentPageUriIndex]);
                     ImageDownloader.CreateSaveDir(saveDirPath);
@@ -82,9 +91,6 @@ namespace MangaDownloader.ViewModels
                     int imageIndex = 0;
                     await foreach (var image in _imageDownloader.DownloadImages(imageUris))
                     {
-                        // 画像保存ボタンを別に作ってそこでディレクトリ作成してもいいかも？
-                        // ・ページネーションを実装してUrlごとに画像表示領域を作る
-                        // ・画像はチェックボックスで保存に含めるか
                         var imagePath = Path.Combine(saveDirPath, $"{imageIndex}.jpg");
                         imageIndex++;
                         _progress.OnUpdateProgress(1);

@@ -10,11 +10,20 @@ namespace MangaDownloader.ViewModels
 
         public DownloadingInfoViewModel DownloadingInfoViewModel { get; } = new DownloadingInfoViewModel();
 
-
         public MainWindowViewModel()
         {
-            var source = new ProgressEventSource().Subscribe(SetMaxProgress, UpdateProgress, ResetProgress);
-            PrepareAreaViewModel = new PrepareAreaViewModel(source);
+            PrepareAreaViewModel = new PrepareAreaViewModel(
+                new ProgressEventSource().Subscribe(
+                    SetMaxProgress,
+                    UpdateProgress,
+                    ResetProgress
+                    ),
+                new DownloadInfoEventSource().Subscribe(
+                    DownloadingInfoViewModel.SetTotalUrlNumber,
+                    DownloadingInfoViewModel.SetCurrentUrl,
+                    DownloadingInfoViewModel.ForwardCurrentUrlIndex
+                    )
+                );
             _currentPage = PrepareAreaViewModel;
 
             // ダウンロードしているかで画面(CurrentPage)を変更

@@ -1,10 +1,6 @@
 ﻿using Avalonia.Controls;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MangaDownloader.ViewModels
 {
@@ -18,12 +14,43 @@ namespace MangaDownloader.ViewModels
             }
         }
 
+        private int _totalUrlNumber;
+
+        public int TotalUrlNumber
+        {
+            get => _totalUrlNumber;
+            set => this.RaiseAndSetIfChanged(ref _totalUrlNumber, value);
+        }
+
+        private int _currentUrlIndex;
+
+        public int CurrentUrlIndex
+        {
+            get => _currentUrlIndex;
+            set => this.RaiseAndSetIfChanged(ref _currentUrlIndex, value);
+        }
+
         private string _downloadingUrl = string.Empty;
 
         public string DownloadingUrl
         {
             get => _downloadingUrl;
             set => this.RaiseAndSetIfChanged(ref _downloadingUrl, value);
+        }
+
+        public void SetTotalUrlNumber(int totalUrlNumber)
+        {
+            _totalUrlNumber = totalUrlNumber;
+        }
+
+        public void SetCurrentUrl(Uri uri)
+        {
+            DownloadingUrl = uri.ToString();
+        }
+
+        public void ForwardCurrentUrlIndex()
+        {
+            CurrentUrlIndex++;
         }
     }
 }
