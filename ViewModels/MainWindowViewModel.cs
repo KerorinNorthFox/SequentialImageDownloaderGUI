@@ -1,4 +1,4 @@
-﻿using MangaDownloader.Models;
+﻿using MangaDownloader.Models.EventSources;
 using ReactiveUI;
 using System;
 
@@ -49,17 +49,17 @@ namespace MangaDownloader.ViewModels
 
         public void SetMaxProgress(int value)
         {
-            this.MaxProgressValue = value;
+            MaxProgressValue = value;
         }
 
         public void UpdateProgress(int addition)
         {
-            this.ProgressValue += addition;
+            ProgressValue += addition;
         }
 
         public void ResetProgress()
         {
-            this.ProgressValue = 0;
+            ProgressValue = 0;
         }
     }
 }
