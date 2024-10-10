@@ -1,0 +1,18 @@
+﻿[
+  {
+    "Host": "ddd-smart.net",
+    "Selectors": [
+      "#comic-area > img:nth-child(xxxx)"
+    ],
+    "StartIndex": 1,
+    "IsNecessaryFileNumber": false
+  },
+  {
+    "Host": "momon-ga.com",
+    "Selectors": [
+      "#post-hentai > img:nth-child(xxxx)"
+    ],
+    "StartIndex": 2,
+    "IsNecessaryFileNumber": false
+  }
+]

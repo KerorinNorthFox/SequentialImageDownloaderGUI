@@ -1,0 +1,39 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:MangaDownloader.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="500"
+             x:Class="MangaDownloader.Views.DownloadingInfoView"
+			 x:DataType="vm:DownloadingInfoViewModel"
+			 >
+	<Design.DataContext>
+		<vm:DownloadingInfoViewModel />
+	</Design.DataContext>
+	
+	<Border Padding="10">
+		<Grid
+			RowDefinitions="Auto,Auto"
+			ColumnDefinitions="Auto,*"
+			>
+			<Label
+				Grid.Row="0"
+				Grid.ColumnSpan="3"
+				>
+				Downloading Info
+			</Label>
+			<TextBlock
+				Grid.Row="1"
+				Grid.Column="0"
+				Padding="20,0"
+				>
+				URL :
+			</TextBlock>
+			<TextBlock
+				Grid.Row="2"
+				Grid.Column="1"
+				Text="{Binding DownloadingUrl}"
+				/>
+		</Grid>
+	</Border>
+</UserControl>
