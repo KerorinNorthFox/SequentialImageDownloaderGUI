@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace MangaDownloader.Models
+namespace MangaDownloader.Models.EventSources
 {
     public class ProgressEventSource
     {
