@@ -42,15 +42,9 @@ namespace MangaDownloader.Models
         /// <returns></returns>
         public async Task<List<Uri>> GetSequentialImagesUris(Uri pageUri)
         {
-            var document = await getDocument(pageUri);
+            using var document = await getDocument(pageUri);
 
-            List<Uri> imageUris = new List<Uri>();
-            foreach (var imageUri in parseSequentialImagesUri(document, pageUri))
-            {
-                imageUris.Add(imageUri);
-            }
-
-            return imageUris;
+            return parseSequentialImagesUri(document, pageUri).ToList();
         }
 
         private async Task<IDocument> getDocument(Uri uri)
@@ -119,27 +113,15 @@ namespace MangaDownloader.Models
 
         public static string GenerateSaveDirPathFromUri(string baseDir, Uri uri)
         {
-            string saveDirPath = Path.Combine(baseDir, "save");
+            string saveDirPath = Path.Combine(baseDir, "save", string.Join("", uri.Segments.Skip(1))); // 最初の"\"をスキップ
 
-            foreach (var seg in uri.Segments.Skip(1)) // 最初の"\"をスキップ
+            if (!string.IsNullOrEmpty(uri.Query))
             {
-                saveDirPath = Path.Combine(saveDirPath, seg);
-            }
-            if (uri.Query != "")
-            {
-                saveDirPath = Path.Combine(saveDirPath, uri.Query);
+                saveDirPath = Path.Combine(saveDirPath, uri.Query.TrimStart('?'));
             }
 
-            string[] banWords = ["?", "*", "<", ">", "|", "\""];
-            foreach (var word in banWords)
-            {
-                if (saveDirPath.Contains(word))
-                {
-                    saveDirPath = saveDirPath.Replace(word, "");
-                }
-            }
-
-            return saveDirPath;
+            return Path.GetInvalidPathChars() // ディレクトリ名に使用できない不正な文字を取得
+                .Aggregate(saveDirPath, (dirPath, invalidChar) => dirPath.Replace(invalidChar.ToString(), ""));
         }
 
         public static void CreateSaveDir(string saveDirPath)
