@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace MangaDownloader.Models
 {
-    public class ImageDownloader
+    public class ImageDownloader : IDisposable
     {
         private HttpClient _httpClient = new HttpClient();
 
@@ -55,16 +55,14 @@ namespace MangaDownloader.Models
 
         private async Task<IDocument> getDocument(Uri uri)
         {
-            IDocument document;
             try
             {
-                var resHtml = await _httpClient.GetStringAsync(uri);
-                document = await _context.OpenAsync(req => req.Content(resHtml));
+                return await _context.OpenAsync(uri.ToString());
+
             } catch (Exception e)
             {
                 throw new FailedDownloadException(e.Message);
             }
-            return document;
         }
 
         private IEnumerable<Uri> parseSequentialImagesUri(IDocument targetDoc, Uri targetUri)
@@ -150,6 +148,12 @@ namespace MangaDownloader.Models
             {
                 Directory.CreateDirectory(saveDirPath);
             }
+        }
+
+        public void Dispose()
+        {
+            _httpClient.Dispose();
+            _context.Dispose();
         }
     }
 
