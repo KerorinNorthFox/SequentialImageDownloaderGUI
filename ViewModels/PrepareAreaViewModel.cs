@@ -61,7 +61,6 @@ namespace MangaDownloader.ViewModels
             int currentPageUriIndex = 0;
             try
             {
-                _progress.OnSetMaxProgress(urlList.Count);
                 _downloadInfo.OnSetTotalUrlNumber(urlList.Count);
                 foreach (var url in urlList)
                 {
@@ -72,7 +71,6 @@ namespace MangaDownloader.ViewModels
                     currentPageUriIndex++;
                     _progress.OnUpdateProgress(1);
                 }
-                _progress.OnResetProgress();
                 _progress.OnSetMaxProgress(uriCount);
 
                 currentPageUriIndex = 0;
