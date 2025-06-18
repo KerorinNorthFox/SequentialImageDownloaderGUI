@@ -8,6 +8,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MangaDownloader.Models
@@ -74,6 +75,10 @@ namespace MangaDownloader.Models
 
                 string targetSelector = selector.Selectors[selectorIndex];
                 targetSelector = targetSelector.Replace("xxxx", (selector.StartIndex+index).ToString());
+                if (selector.IsNecessaryFileNumber)
+                {
+                    targetSelector = targetSelector.Replace("yyyy", Regex.Replace(targetUri.Segments[^1], @"\D", ""));
+                }
                 Debug.WriteLine($">>selector :{targetSelector}");
 
                 IHtmlImageElement? imageElement = targetDoc.QuerySelector(targetSelector) as IHtmlImageElement;
