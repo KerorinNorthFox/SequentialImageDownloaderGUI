@@ -1,0 +1,65 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:MangaDownloader.ViewModels"
+             mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="100"
+             x:Class="MangaDownloader.Views.InputUrlView"
+			 x:DataType="vm:InputUrlViewModel"
+			 >
+	<!--URL“ü—ÍƒGƒŠƒA-->
+	<Grid
+		Grid.Row="0"
+		RowDefinitions="Auto,Auto,Auto"
+		ColumnDefinitions="*,*"
+		>
+		
+		<Grid.KeyBindings>
+			<KeyBinding Gesture="Enter" Command="{Binding AddUrlCommand}" />
+			<KeyBinding Gesture="Escape" Command="{Binding ClearInputUrlCommand}" />
+		</Grid.KeyBindings>
+		
+		<Label
+			Grid.Row="0"
+			Grid.Column="0"
+			Padding="6"
+			FontSize="12"
+			>
+			URL
+		</Label>
+		
+		<Label
+			Grid.Row="0"
+			Grid.Column="1"
+			Padding="6"
+			HorizontalAlignment="Right"
+			FontSize="12"
+			Content="{Binding ErrorMessage}"
+			Foreground="Red"
+			>
+			*caution
+		</Label>
+		
+		<TextBox
+			Grid.Row="1"
+			Grid.ColumnSpan="2"
+			Height="12"
+			FontSize="12"
+			Text="{Binding InputUrlText}"
+			/>
+			<!--Background="#414449"-->
+		
+		<Button
+			Grid.Row="2"
+			Grid.ColumnSpan="2"
+			Margin="5"
+			Padding="30,5"
+			HorizontalAlignment="Center"
+			FontSize="12"
+			Command="{Binding AddUrlCommand}"
+			>
+			<!--Background="#414449"-->
+			Add
+		</Button>
+	</Grid>
+</UserControl>
