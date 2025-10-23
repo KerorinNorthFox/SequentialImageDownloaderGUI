@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Avalonia.Media.Imaging;
+using MangaDownloader.Models;
+using MangaDownloader.Models.Config;
+using ReactiveUI;
+using System;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using MangaDownloader.Models;
-using MangaDownloader.Models.EventSources;
-using ReactiveUI;
 
 namespace MangaDownloader.ViewModels
 {
@@ -13,51 +14,70 @@ namespace MangaDownloader.ViewModels
 
         public MangaListViewModel MangaListViewModel { get; } = new MangaListViewModel();
 
-        private ImageDownloader _imageDownloader = new ImageDownloader();
+        private ImageDownloader _downloader;
 
-        // 親からダウンロード開始時のメソッドをコマンドとして貰う
-        public TaskManageViewModel()
+        private Config _config;
+
+        /// <summary>
+        /// ダウンロード中かどうかのフラグ
+        /// </summary>
+        public bool IsDownloading = false;
+
+        // 親からダウンロード開始時のメソッドをコマンドとして貰う(?なにこれ)
+        public TaskManageViewModel(Config config)
         {
-            InputUrlViewModel = new InputUrlViewModel(
-                new InputUrlEventSource().Subscribe(MangaListViewModel.AddManga)
-                );
+            _config = config;
+
+            _downloader = new ImageDownloader(_config.SelectorJsonPath);
+            InputUrlViewModel = new InputUrlViewModel(MangaListViewModel.AddManga);
 
             StartDownloadCommand = ReactiveCommand.CreateFromTask(startDownload);
-            UploadDiscordCommand = ReactiveCommand.Create(uploadDiscordCommand);
         }
 
         public ICommand StartDownloadCommand { get; }
 
-        public ICommand UploadDiscordCommand { get; }
 
         private async Task startDownload()
         {
+            // TODO: IsDownloadフラグでダウンロードボタンとAddUriボタンを無効化, dl終了までにmangaListに変更を加えないようにする
+            if (IsDownloading)
+            {
+                return;
+            }
+
             var mangaList = MangaListViewModel.MangaList;
             if (mangaList.Count <= 0)
             {
                 return;
             }
 
-            for (int i = 0; i <= MangaListViewModel.MangaList.Count; i++)
+            IsDownloading = true;
+
+            for (int i = 0; i <= mangaList.Count; i++)
             {
-                startMangaDownload(MangaListViewModel.MangaList[i]);
+                try
+                {
+                    var manga = mangaList[i];
+                    manga.ChangeDownloadState(DownloadState.Downloading); // TODO: 状態が変わってもアイコンが変わらないかも?
+
+                    var doc = await _downloader.GetDocument(manga.Uri);
+                    var imageUris = _downloader.ParsePageUri(doc, manga.Uri);
+
+                    foreach (var imageUri in imageUris)
+                    {
+                        Bitmap image = await _downloader.DownloadImage(imageUri);
+                        manga.AddPageByIndex(i, imageUri, image); //TODO
+                    }
+
+                    manga.ChangeDownloadState(DownloadState.Finished); //TODO
+                }
+                catch (FailedDownloadException e)
+                {
+
+                }
             }
-        }
 
-        private async Task startMangaDownload(Manga manga)
-        {
-            try
-            {
-                manga.ChangeDownloadState(DownloadState.Downloading);
-
-                var imageUris = await _imageDownloader.GetSequentialImagesUris(manga.MangaUri);
-            }
-            catch (Exception e) { }
-        }
-
-        private void uploadDiscordCommand()
-        {
-
+            IsDownloading = false;
         }
     }
 }
