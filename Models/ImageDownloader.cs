@@ -125,6 +125,7 @@ namespace MangaDownloader.Models
     {
         Pending,
         Downloading,
-        Finished
+        Finished,
+        Failed
     }
 }

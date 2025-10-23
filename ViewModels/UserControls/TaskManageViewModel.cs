@@ -1,8 +1,8 @@
-﻿using Avalonia.Media.Imaging;
-using MangaDownloader.Models;
+﻿using MangaDownloader.Models;
 using MangaDownloader.Models.Config;
 using ReactiveUI;
-using System;
+using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -23,10 +23,17 @@ namespace MangaDownloader.ViewModels
         /// </summary>
         public bool IsDownloading = false;
 
-        // 親からダウンロード開始時のメソッドをコマンドとして貰う(?なにこれ)
+        /// <summary>
+        /// 並列ダウンロード数の上限
+        /// </summary>
+        private readonly int _maxConcurrentDownloads = 10;
+
+        private readonly SemaphoreSlim _downloadSemaphore;
+
         public TaskManageViewModel(Config config)
         {
             _config = config;
+            _downloadSemaphore = new SemaphoreSlim(_maxConcurrentDownloads, _maxConcurrentDownloads);
 
             _downloader = new ImageDownloader(_config.SelectorJsonPath);
             InputUrlViewModel = new InputUrlViewModel(MangaListViewModel.AddManga);
@@ -53,7 +60,7 @@ namespace MangaDownloader.ViewModels
 
             IsDownloading = true;
 
-            for (int i = 0; i <= mangaList.Count; i++)
+            for (int i = 0; i < mangaList.Count; i++)
             {
                 try
                 {
@@ -63,17 +70,29 @@ namespace MangaDownloader.ViewModels
                     var doc = await _downloader.GetDocument(manga.Uri);
                     var imageUris = _downloader.ParsePageUri(doc, manga.Uri);
 
-                    foreach (var imageUri in imageUris)
+                    var imageDownloadTasks = imageUris.Select(async (uri, index) =>
                     {
-                        Bitmap image = await _downloader.DownloadImage(imageUri);
-                        manga.AddPageByIndex(i, imageUri, image); //TODO
+                        await _downloadSemaphore.WaitAsync(); // セマフォで並列数を制限
+                        try
+                        {
+                            var image = await _downloader.DownloadImage(uri);
+                            return new { Index = index, Uri = uri, Image = image };
+                        }
+                        finally
+                        {
+                            _downloadSemaphore.Release(); // 完了後にセマフォを解放
+                        }
+                    });
+                    var results = await Task.WhenAll(imageDownloadTasks);
+                    foreach (var result in results)
+                    {
+                        manga.AddPageByIndex(result.Index, result.Uri, result.Image);
                     }
 
                     manga.ChangeDownloadState(DownloadStatus.Finished); //TODO
                 }
                 catch (FailedDownloadException e)
                 {
-
                 }
             }
 
@@ -81,8 +100,3 @@ namespace MangaDownloader.ViewModels
         }
     }
 }
-
-// メモ
-// addボタンでurlを追加したらMangaTaskクラスのインスタンス作成して、"MangaTasks"リストに追加
-// UrlListViewModelのUrlListには"MangaTasks"リストから要素を縦に並べる
-// 並べる際に、コンバーターでMangaTaskインスタンスからタイトル(ない場合はURL)を表示するようにする
