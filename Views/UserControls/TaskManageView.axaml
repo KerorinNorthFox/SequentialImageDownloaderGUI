@@ -1,46 +1,32 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:views="clr-namespace:MangaDownloader.Views"
 			 xmlns:vm="using:MangaDownloader.ViewModels"
-             mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="500"
-             x:Class="MangaDownloader.Views.TaskManageView"
+			 mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="500"
+			 x:Class="MangaDownloader.Views.TaskManageView"
 			 x:DataType="vm:TaskManageViewModel"
 			 >
 	<Border Padding="10">
 		<!--Background="#313539"-->
 		<Grid RowDefinitions="Auto,*,Auto">
-			<views:InputUrlView
-				Grid.Row="0"
-				DataContext="{Binding InputUrlViewModel}"
-				/>
-			<views:MangaListView
-				Grid.Row="1"
-				DataContext="{Binding MangaListViewModel}"/>
-			<Grid
-				Grid.Row="2"
-				RowDefinitions="Auto,Auto"
-				Margin="5"
-				>
-				<Button
-					Grid.Row="0"
+			<views:InputUrlView Grid.Row="0"
+								DataContext="{Binding InputUrlViewModel}"
+								/>
+
+			<views:MangaListView Grid.Row="1"
+								 DataContext="{Binding MangaListViewModel}"
+								 />
+
+			<Button Grid.Row="2"
 					HorizontalAlignment="Stretch"
 					HorizontalContentAlignment="Center"
+					Margin="5"
 					Command="{Binding StartDownloadCommand}"
 					>
-					Download
-				</Button>
-				<Button
-					Grid.Row="1"
-					HorizontalAlignment="Stretch"
-					HorizontalContentAlignment="Center"
-					Margin="0,5,0,0"
-					Command="{Binding UploadDiscordCommand}"
-					>
-					Upload to Discord
-				</Button>
-			</Grid>
+				Download
+			</Button>
 		</Grid>
 	</Border>
 </UserControl>

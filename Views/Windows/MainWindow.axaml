@@ -1,16 +1,16 @@
 <Window xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+		xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+		xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 		xmlns:views="clr-namespace:MangaDownloader.Views"
-        xmlns:vm="using:MangaDownloader.ViewModels"
-        mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
+		xmlns:vm="using:MangaDownloader.ViewModels"
+		mc:Ignorable="d" d:DesignWidth="600" d:DesignHeight="500"
 		x:CompileBindings="True"
-        x:Class="MangaDownloader.Views.MainWindow"
-        x:DataType="vm:MainWindowViewModel"
+		x:Class="MangaDownloader.Views.MainWindow"
+		x:DataType="vm:MainWindowViewModel"
 		x:Name="MainWindowWindow"
-        Icon="/Assets/avalonia-logo.ico"
-        Title="MangaDownloader"
+		Icon="/Assets/avalonia-logo.ico"
+		Title="MangaDownloader"
 		WindowStartupLocation="CenterScreen"
 		Width="600" Height="500"
 		MinWidth="600" MinHeight="400"
@@ -21,7 +21,6 @@
 	</Design.DataContext>
 
 	<DockPanel>
-		<!--メニューバー-->
 		<Menu DockPanel.Dock="Top">
 			<MenuItem Header="File">
 				<MenuItem Header="Exit" />
@@ -34,78 +33,84 @@
 			</MenuItem>
 		</Menu>
 
-		<!--ステータスバー-->
-		<Border
-			DockPanel.Dock="Bottom"
-			Padding="10, 0"
-			Background="#007acc"
-			>
-			<Grid
-				ColumnDefinitions="Auto,Auto,*"
-				Height="25"
+		<Border DockPanel.Dock="Bottom"
+				Padding="10, 0"
+				Background="#007acc"
 				>
-				<Label
-					Grid.Column="0"
-					VerticalAlignment="Center"
-					FontSize="12"
-					Foreground="WhiteSmoke"
-					>
+			<Grid Height="25">
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
+
+				<Label Grid.Column="0"
+					   VerticalAlignment="Center"
+					   FontSize="12"
+					   Foreground="WhiteSmoke"
+					   >
 					Download status
 				</Label>
-				<ProgressBar
-					Grid.Column="1"
-					Margin="10, 0"
-					VerticalAlignment="Center"
-				/>
-				<Label
-					Grid.Column="2"
-					HorizontalAlignment="Right"
-					VerticalAlignment="Center"
-					FontSize="12"
-					Foreground="WhiteSmoke"
-					>
+				<ProgressBar Grid.Column="1"
+							 VerticalAlignment="Center"
+							 Margin="10, 0"
+							 />
+				<Label Grid.Column="2"
+					   HorizontalAlignment="Right"
+					   VerticalAlignment="Center"
+					   FontSize="12"
+					   Foreground="WhiteSmoke"
+					   >
 					status
 				</Label>
 			</Grid>
 		</Border>
 
+		<Grid>
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="250" MinWidth="250" />
+				<ColumnDefinition Width="5" />
+				<ColumnDefinition Width="*" MinWidth="10" />
+			</Grid.ColumnDefinitions>
 
-		<Grid ColumnDefinitions="250,1,*">
-			<!--<views:PrepareAreaView Grid.Row="0" DataContext="{Binding PrepareAreaViewModel}" />-->
-			<!--<views:DownloadingInfoView Grid.Row="0" />-->
-			<views:TaskManageView Grid.Row="0" DataContext="{Binding TaskManageViewModel}" />
+			<views:TaskManageView Grid.Row="0" DataContext="{Binding TaskManageViewModel}" MinWidth="250" />
 
-			<!--<GridSplitter Grid.Column="1" Margin="0, 5" Background="Black" ResizeDirection="Columns" />-->
+			<GridSplitter Grid.Column="1" CornerRadius="5" Margin="2" Background="WhiteSmoke" ResizeDirection="Columns" />
 
-			<!--画像表示パネル-->
-			<Grid
-				RowDefinitions="Auto,*"
-				Grid.Column="2"
-				Margin="10"
-				>
-				<Grid
-					ColumnDefinitions="Auto,Auto,*"
-					Grid.Row="0"
-					>
+			<!-- TODO: 画像表示パネルとプロパティパネルを有すEditPanelを実装 -->
+			<Grid Grid.Column="2"
+				  Margin="10">
+				<Grid.RowDefinitions>
+					<RowDefinition Height="Auto" />
+					<RowDefinition Height="*" />
+				</Grid.RowDefinitions>
+
+				<Grid Grid.Row="0">
+					<Grid.ColumnDefinitions>
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="Auto" />
+						<ColumnDefinition Width="*" />
+					</Grid.ColumnDefinitions>
+
 					<Button
-						Grid.Column="0"
-						>
+					Grid.Column="0"
+					>
 						<!--Foreground="WhiteSmoke"-->
 						<!--Background="#414449"-->
 						左
 					</Button>
 					<Button
-						Grid.Column="1"
-						Margin="5,0,0,0"
-						>
+					Grid.Column="1"
+					Margin="5,0,0,0"
+					>
 						<!--Foreground="WhiteSmoke"-->
 						<!--Background="#414449"-->
 						右
 					</Button>
 					<Label
-						Grid.Column="2"
-						Margin="10,0,0,0"
-						>
+					Grid.Column="2"
+					Margin="10,0,0,0"
+					>
 						<!--Foreground="WhiteSmoke"-->
 						*site name
 					</Label>
