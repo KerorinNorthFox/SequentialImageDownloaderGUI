@@ -15,7 +15,7 @@ namespace MangaDownloader.ViewModels
         {
             _addUrlAction = addUrlAction;
 
-            AddUrlCommand = ReactiveCommand.Create(AddUrl);
+            AddUrlCommand = ReactiveCommand.Create(addUrl);
             ClearInputUrlCommand = ReactiveCommand.Create(ClearInputUrl);
         }
 
@@ -51,7 +51,7 @@ namespace MangaDownloader.ViewModels
         /// </summary>
         public ICommand ClearInputUrlCommand { get; }
 
-        public void AddUrl()
+        private void addUrl()
         {
             Uri inputUri;
             try
@@ -70,16 +70,16 @@ namespace MangaDownloader.ViewModels
 
         public void ClearInputUrl()
         {
-            _clearInputUrl();
-            _clearErrorMessage();
+            clearInputUrl();
+            clearErrorMessage();
         }
 
-        private void _clearInputUrl()
+        private void clearInputUrl()
         {
             InputUrlText = "";
         }
 
-        private void _clearErrorMessage()
+        private void clearErrorMessage()
         {
             ErrorMessage = "";
         }

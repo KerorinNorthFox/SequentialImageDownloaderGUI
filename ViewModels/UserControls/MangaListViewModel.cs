@@ -18,9 +18,9 @@ namespace MangaDownloader.ViewModels
                 AddManga(new Uri("https://www.google.com"));
             }
 
-            var isDeleteButtonEnabled = this.WhenAnyValue(
+            var isDeleteButtonEnabled = this.WhenAnyValue( // SelectedIndexが選択されているときにisDeleteButtonEnabledをtrueにする
                 selfVm => selfVm.SelectedIndex,
-                selectedIndex => selectedIndex >= 0);
+                i => i >= 0);
 
             RemoveMangaCommand = ReactiveCommand.Create(() => _removeManga(SelectedIndex), isDeleteButtonEnabled);
             ClearMangaListCommand = ReactiveCommand.Create(ClearMangaList);
