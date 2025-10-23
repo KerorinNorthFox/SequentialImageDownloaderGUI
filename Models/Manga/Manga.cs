@@ -17,14 +17,14 @@ namespace MangaDownloader.Models
 
         public Dictionary<int, Page> Pages { get; private set; } = new Dictionary<int, Page>();
 
-        private DownloadState _state = DownloadState.NotDownloaded;
+        private DownloadStatus _state = DownloadStatus.Pending;
 
         public Manga(Uri uri)
         {
             Uri = uri;
         }
 
-        public DownloadState State
+        public DownloadStatus State
         {
             get => _state;
             set => this.RaiseAndSetIfChanged(ref _state, value);
@@ -35,7 +35,7 @@ namespace MangaDownloader.Models
             Pages.Add(index, new Page(index, uri, image));
         }
 
-        public void ChangeDownloadState(DownloadState state)
+        public void ChangeDownloadState(DownloadStatus state)
         {
             State = state;
         }

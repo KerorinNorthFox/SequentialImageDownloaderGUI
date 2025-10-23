@@ -121,9 +121,9 @@ namespace MangaDownloader.Models
         public FailedDownloadException(string message) : base(message) { }
     }
 
-    public enum DownloadState
+    public enum DownloadStatus
     {
-        NotDownloaded,
+        Pending,
         Downloading,
         Finished
     }

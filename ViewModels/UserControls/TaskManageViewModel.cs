@@ -58,7 +58,7 @@ namespace MangaDownloader.ViewModels
                 try
                 {
                     var manga = mangaList[i]; // mangaは参照を持つので、値を変更してもMangaListViewModel.MangaListに反映される.
-                    manga.ChangeDownloadState(DownloadState.Downloading);
+                    manga.ChangeDownloadState(DownloadStatus.Downloading);
 
                     var doc = await _downloader.GetDocument(manga.Uri);
                     var imageUris = _downloader.ParsePageUri(doc, manga.Uri);
@@ -69,7 +69,7 @@ namespace MangaDownloader.ViewModels
                         manga.AddPageByIndex(i, imageUri, image); //TODO
                     }
 
-                    manga.ChangeDownloadState(DownloadState.Finished); //TODO
+                    manga.ChangeDownloadState(DownloadStatus.Finished); //TODO
                 }
                 catch (FailedDownloadException e)
                 {
