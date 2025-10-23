@@ -1,10 +1,11 @@
 ﻿using Avalonia.Media.Imaging;
+using ReactiveUI;
 using System;
 using System.Collections.Generic;
 
 namespace MangaDownloader.Models
 {
-    public class Manga
+    public class Manga : ReactiveObject
     {
         public string? Title { get; set; }
 
@@ -16,19 +17,22 @@ namespace MangaDownloader.Models
 
         public Dictionary<int, Page> Pages { get; private set; } = new Dictionary<int, Page>();
 
-        /// <summary>
-        /// DL進捗状況
-        /// </summary>
-        public DownloadState State { get; private set; } = DownloadState.NotDownloaded;
+        private DownloadState _state = DownloadState.NotDownloaded;
 
         public Manga(Uri uri)
         {
             Uri = uri;
         }
 
+        public DownloadState State
+        {
+            get => _state;
+            set => this.RaiseAndSetIfChanged(ref _state, value);
+        }
+
         public void AddPageByIndex(int index, Uri uri, Bitmap image)
         {
-            Pages.Add(index, new Page(uri, image));
+            Pages.Add(index, new Page(index, uri, image));
         }
 
         public void ChangeDownloadState(DownloadState state)

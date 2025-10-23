@@ -57,8 +57,8 @@ namespace MangaDownloader.ViewModels
             {
                 try
                 {
-                    var manga = mangaList[i];
-                    manga.ChangeDownloadState(DownloadState.Downloading); // TODO: 状態が変わってもアイコンが変わらないかも?
+                    var manga = mangaList[i]; // mangaは参照を持つので、値を変更してもMangaListViewModel.MangaListに反映される.
+                    manga.ChangeDownloadState(DownloadState.Downloading);
 
                     var doc = await _downloader.GetDocument(manga.Uri);
                     var imageUris = _downloader.ParsePageUri(doc, manga.Uri);
