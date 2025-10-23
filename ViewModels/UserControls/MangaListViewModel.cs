@@ -72,6 +72,11 @@ namespace MangaDownloader.ViewModels
 
         public void ClearMangaList()
         {
+            // 全てのMangaオブジェクトを適切に解放
+            foreach (var manga in MangaList)
+            {
+                manga?.Dispose();
+            }
             MangaList.Clear();
         }
 
@@ -88,10 +93,15 @@ namespace MangaDownloader.ViewModels
 
         private void _removeManga(int index)
         {
-            if (index < 0)
+            if (index < 0 || index >= MangaList.Count)
             {
                 return;
             }
+            
+            // 削除前にリソースを解放
+            var manga = MangaList[index];
+            manga?.Dispose();
+            
             MangaList.RemoveAt(index);
         }
     }

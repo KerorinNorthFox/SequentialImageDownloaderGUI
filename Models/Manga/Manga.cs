@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace MangaDownloader.Models
 {
-    public class Manga : ReactiveObject
+    public class Manga : ReactiveObject, IDisposable
     {
         public string Title { get; set; } = string.Empty;
 
@@ -18,6 +18,8 @@ namespace MangaDownloader.Models
         public Dictionary<int, Page> Pages { get; private set; } = new Dictionary<int, Page>();
 
         private DownloadStatus _state = DownloadStatus.Pending;
+
+        private bool _disposed = false;
 
         public Manga(Uri uri)
         {
@@ -38,6 +40,34 @@ namespace MangaDownloader.Models
         public void ChangeDownloadState(DownloadStatus state)
         {
             State = state;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    // 全てのPageのBitmapを解放
+                    foreach (var page in Pages.Values)
+                    {
+                        page?.Dispose();
+                    }
+                    Pages.Clear();
+                }
+                _disposed = true;
+            }
+        }
+
+        ~Manga()
+        {
+            Dispose(false);
         }
     }
 }
