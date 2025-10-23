@@ -65,11 +65,14 @@ namespace MangaDownloader.ViewModels
                 try
                 {
                     var manga = mangaList[i]; // mangaは参照を持つので、値を変更してもMangaListViewModel.MangaListに反映される.
+                    if (manga.State != DownloadStatus.Pending || manga.State != DownloadStatus.Failed)
+                    {
+                        continue;
+                    }
                     manga.ChangeDownloadState(DownloadStatus.Downloading);
 
                     var doc = await _downloader.GetDocument(manga.Uri);
                     var imageUris = _downloader.ParsePageUri(doc, manga.Uri);
-
                     var imageDownloadTasks = imageUris.Select(async (uri, index) =>
                     {
                         await _downloadSemaphore.WaitAsync(); // セマフォで並列数を制限
