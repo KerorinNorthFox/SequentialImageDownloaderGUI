@@ -11,20 +11,23 @@
 			 >
 	<UserControl.Resources>
 		<conv:MangaTitleOrUriConverter x:Key="MangaTitleOrUriConverter" />
+		<conv:DownloadStatusToIconConverter x:Key="DownloadStatusToIconConverter" />
+		<conv:DownloadStatusToColorConverter x:Key="DownloadStatusToColorConverter" />
 	</UserControl.Resources>
 
 	<!--URLリスト表示エリア-->
-	<Grid
-	Grid.Row="1"
-	RowDefinitions="Auto,*,Auto"
-	ColumnDefinitions="*,*"
-	>
-		<Label Grid.Row="0"
-			   Grid.Column="0"
-			   Padding="6"
-			   FontSize="12">
-			Task List
-		</Label>
+	<Grid Grid.Row="1">
+		<Grid.RowDefinitions>
+			<RowDefinition>Auto</RowDefinition>
+			<RowDefinition>*</RowDefinition>
+			<RowDefinition>Auto</RowDefinition>
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition>*</ColumnDefinition>
+			<ColumnDefinition>*</ColumnDefinition>
+		</Grid.ColumnDefinitions>
+
+		<Label Grid.Row="0" Grid.Column="0" Padding="6" FontSize="12" Content="Task List" />
 		<ListBox Grid.Row="1"
 				 Grid.ColumnSpan="2"
 				 Name="MangaList"
@@ -33,20 +36,12 @@
 			<!--Background="#414449"-->
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<StackPanel Orientation="Horizontal"
-								Spacing="10">
-						<iconPacks:PackIconMaterial Kind="Check"
-													Width="16"
+					<StackPanel Orientation="Horizontal" Spacing="10">
+						<iconPacks:PackIconMaterial Width="16"
 													Height="16"
-													IsVisible="True"
-													Foreground="Green"/>
-						<iconPacks:PackIconMaterial Kind="WindowClose"
-													Width="16"
-													Height="16"
-													IsVisible="False"
-													Foreground="Red"/>
-						<TextBlock FontSize="12"
-								   Height="14">
+													Kind="{Binding State, Converter={StaticResource DownloadStatusToIconConverter}}"
+													Foreground="{Binding State, Converter={StaticResource DownloadStatusToColorConverter}}"/>
+						<TextBlock Height="14" FontSize="12">
 							<TextBlock.Text>
 								<MultiBinding Converter="{StaticResource MangaTitleOrUriConverter}">
 									<Binding Path="Title"/>
@@ -58,27 +53,23 @@
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
-		<Button
-		Grid.Row="2"
-		Grid.Column="0"
-		Margin="5"
-		FontSize="12"
-		HorizontalAlignment="Stretch"
-		HorizontalContentAlignment="Center"
-		Command="{Binding RemoveMangaCommand}"
-		>
+		<Button Grid.Row="2"
+				Grid.Column="0"
+				Margin="5"
+				FontSize="12"
+				HorizontalAlignment="Stretch"
+				HorizontalContentAlignment="Center"
+				Command="{Binding RemoveMangaCommand}" >
 			<!--Background="#414449"-->
 			Delete
 		</Button>
-		<Button
-		Grid.Row="2"
-		Grid.Column="1"
-		Margin="5"
-		FontSize="12"
-		HorizontalAlignment="Stretch"
-		HorizontalContentAlignment="Center"
-		Command="{Binding ClearMangaListCommand}"
-		>
+		<Button Grid.Row="2"
+				Grid.Column="1"
+				Margin="5"
+				FontSize="12"
+				HorizontalAlignment="Stretch"
+				HorizontalContentAlignment="Center"
+				Command="{Binding ClearMangaListCommand}" >
 			<!--Background="#414449"-->
 			Clear All
 		</Button>
