@@ -49,8 +49,8 @@
 								   Height="14">
 							<TextBlock.Text>
 								<MultiBinding Converter="{StaticResource MangaTitleOrUriConverter}">
-									<Binding Path="MangaTitle"/>
-									<Binding Path="MangaUri" />
+									<Binding Path="Title"/>
+									<Binding Path="Uri" />
 								</MultiBinding>
 							</TextBlock.Text>
 						</TextBlock>
