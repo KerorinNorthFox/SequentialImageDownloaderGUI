@@ -1,11 +1,12 @@
 <UserControl xmlns="https://github.com/avaloniaui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
 			 xmlns:vm="using:MangaDownloader.ViewModels"
 			 xmlns:conv="using:MangaDownloader.Converter"
-             mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="500"
-             x:Class="MangaDownloader.Views.MangaListView"
+			 mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="500"
+			 x:Class="MangaDownloader.Views.MangaListView"
 			 x:DataType="vm:MangaListViewModel"
 			 >
 	<UserControl.Resources>
@@ -14,63 +15,70 @@
 
 	<!--URLリスト表示エリア-->
 	<Grid
-		Grid.Row="1"
-		RowDefinitions="Auto,*,Auto"
-		ColumnDefinitions="*,*"
-		>
-		<Label
-			Grid.Row="0"
-			Grid.Column="0"
-			Padding="6"
-			FontSize="12"
-			>
+	Grid.Row="1"
+	RowDefinitions="Auto,*,Auto"
+	ColumnDefinitions="*,*"
+	>
+		<Label Grid.Row="0"
+			   Grid.Column="0"
+			   Padding="6"
+			   FontSize="12">
 			Task List
 		</Label>
-		<ListBox
-			Grid.Row="1"
-			Grid.ColumnSpan="2"
-			Name="MangaList"
-			ItemsSource="{Binding MangaList}"
-			SelectedIndex="{Binding SelectedIndex}"
-			>
+		<ListBox Grid.Row="1"
+				 Grid.ColumnSpan="2"
+				 Name="MangaList"
+				 ItemsSource="{Binding MangaList}"
+				 SelectedIndex="{Binding SelectedIndex}">
 			<!--Background="#414449"-->
 			<ListBox.ItemTemplate>
 				<DataTemplate>
-					<TextBlock
-						FontSize="10"
-						Height="14"
-						>
-						<TextBlock.Text>
-							<MultiBinding Converter="{StaticResource MangaTitleOrUriConverter}">
-								<Binding Path="MangaTitle"/>
-								<Binding Path="MangaUri" />
-							</MultiBinding>
-						</TextBlock.Text>
-					</TextBlock>
+					<StackPanel Orientation="Horizontal"
+								Spacing="10">
+						<iconPacks:PackIconMaterial Kind="Check"
+													Width="16"
+													Height="16"
+													IsVisible="True"
+													Foreground="Green"/>
+						<iconPacks:PackIconMaterial Kind="WindowClose"
+													Width="16"
+													Height="16"
+													IsVisible="False"
+													Foreground="Red"/>
+						<TextBlock FontSize="12"
+								   Height="14">
+							<TextBlock.Text>
+								<MultiBinding Converter="{StaticResource MangaTitleOrUriConverter}">
+									<Binding Path="MangaTitle"/>
+									<Binding Path="MangaUri" />
+								</MultiBinding>
+							</TextBlock.Text>
+						</TextBlock>
+					</StackPanel>
 				</DataTemplate>
 			</ListBox.ItemTemplate>
 		</ListBox>
 		<Button
-			Grid.Row="2"
-			Grid.Column="0"
-			Margin="5"
-			FontSize="12"
-			HorizontalAlignment="Stretch"
-			HorizontalContentAlignment="Center"
-			Command="{Binding RemoveMangaCommand}"
-			>
+		Grid.Row="2"
+		Grid.Column="0"
+		Margin="5"
+		FontSize="12"
+		HorizontalAlignment="Stretch"
+		HorizontalContentAlignment="Center"
+		Command="{Binding RemoveMangaCommand}"
+		>
 			<!--Background="#414449"-->
 			Delete
 		</Button>
 		<Button
-			Grid.Row="2"
-			Grid.Column="1"
-			Margin="5"
-			FontSize="12"
-			HorizontalAlignment="Stretch"
-			HorizontalContentAlignment="Center"
-			Command="{Binding ClearMangaListCommand}"
-			>
+		Grid.Row="2"
+		Grid.Column="1"
+		Margin="5"
+		FontSize="12"
+		HorizontalAlignment="Stretch"
+		HorizontalContentAlignment="Center"
+		Command="{Binding ClearMangaListCommand}"
+		>
 			<!--Background="#414449"-->
 			Clear All
 		</Button>
