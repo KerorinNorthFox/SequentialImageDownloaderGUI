@@ -19,7 +19,7 @@ namespace MangaDownloader.ViewModels
             }
 
             var isDeleteButtonEnabled = this.WhenAnyValue(
-                mangaTaskListVm => mangaTaskListVm.SelectedIndex,
+                selfVm => selfVm.SelectedIndex,
                 selectedIndex => selectedIndex >= 0);
 
             RemoveMangaCommand = ReactiveCommand.Create(() => _removeManga(SelectedIndex), isDeleteButtonEnabled);

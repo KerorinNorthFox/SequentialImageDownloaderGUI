@@ -37,9 +37,6 @@ namespace MangaDownloader.Models
             }
         }
 
-        // <summary>
-        // Jsonファイルを読み込みし直す
-        // <\summary>
         public void Reload()
         {
             load(_selectorJsonPath);
