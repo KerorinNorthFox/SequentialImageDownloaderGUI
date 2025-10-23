@@ -74,7 +74,7 @@ namespace MangaDownloader.ViewModels
                 try
                 {
                     var manga = mangaList[i]; // mangaは参照を持つので、値を変更してもMangaListViewModel.MangaListに反映される.
-                    if (manga.State != DownloadStatus.Pending || manga.State != DownloadStatus.Failed)
+                    if (manga.State != DownloadStatus.Pending && manga.State != DownloadStatus.Failed)
                     {
                         continue;
                     }
