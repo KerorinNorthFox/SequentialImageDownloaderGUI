@@ -1,5 +1,4 @@
-﻿using MangaDownloader.Models.EventSources;
-using ReactiveUI;
+﻿using ReactiveUI;
 using System;
 using System.Windows.Input;
 
@@ -7,11 +6,14 @@ namespace MangaDownloader.ViewModels
 {
     public partial class InputUrlViewModel : ViewModelBase
     {
-        private InputUrlEventSource _inputUrlEventSource;
+        /// <summary>
+        /// URL入力時に実行する外部アクション
+        /// </summary>
+        private Action<Uri> _addUrlAction;
 
-        public InputUrlViewModel(InputUrlEventSource source)
+        public InputUrlViewModel(Action<Uri> addUrlAction)
         {
-            _inputUrlEventSource = source;
+            _addUrlAction = addUrlAction;
 
             AddUrlCommand = ReactiveCommand.Create(AddUrl);
             ClearInputUrlCommand = ReactiveCommand.Create(ClearInputUrl);
@@ -61,7 +63,8 @@ namespace MangaDownloader.ViewModels
                 ErrorMessage = "Invalid URL";
                 return;
             }
-            _inputUrlEventSource.OnAddUri(inputUri);
+
+            _addUrlAction.Invoke(inputUri);
             ClearInputUrl();
         }
 
