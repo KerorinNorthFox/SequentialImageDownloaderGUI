@@ -6,14 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace MangaDownloader.Models
 {
-    public class ImageDownloader : IDisposable
+    public class ImageDownloader : IDisposable, IImageDownloader
     {
         private HttpClient _httpClient = new HttpClient();
 
@@ -21,7 +20,7 @@ namespace MangaDownloader.Models
 
         private Selectors _selectors;
 
-        public ImageDownloader()
+        public ImageDownloader(string selectorJsonPath)
         {
 #if DEBUG
             // Assetsファイルのパスを参照する
@@ -31,58 +30,42 @@ namespace MangaDownloader.Models
 #else
             // TODO :本番環境ではAppDataを参照する
             //       AppDataにフォルダを作るコードを書く必要あり？
-            var jsonPath = "";
+            var jsonPath = selectorJsonPath;
 #endif
             _selectors = new Selectors(jsonPath);
         }
 
-        /// <summary>
-        /// ページの連番画像URIのリストを取得する
-        /// </summary>
-        /// <param name="pageUri">連番画像を取得するページのURI</param>
-        /// <returns></returns>
-        public async Task<List<Uri>> GetSequentialImagesUris(Uri pageUri)
-        {
-            using var document = await getDocument(pageUri);
-
-            return parseSequentialImagesUri(document, pageUri).ToList();
-        }
-
-        private async Task<IDocument> getDocument(Uri uri)
+        public async Task<IDocument> GetDocument(Uri uri)
         {
             try
             {
                 return await _context.OpenAsync(uri.ToString());
 
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 throw new FailedDownloadException(e.Message);
             }
         }
 
-        private IEnumerable<Uri> parseSequentialImagesUri(IDocument targetDoc, Uri targetUri)
+        public IEnumerable<Uri> ParsePageUri(IDocument targetDoc, Uri targetUri)
         {
             int index = 0;
             int selectorIndex = 0;
-            while(true)
+            while (true)
             {
                 SelectorMember selector = _selectors[targetUri.Host];
 
-                if (selector.Selectors.Count <= selectorIndex)
+                if (selector.Selectors.Count <= selectorIndex) // 候補セレクターを全て回したらbreak
                 {
                     break;
                 }
 
-                string targetSelector = selector.Selectors[selectorIndex];
-                targetSelector = targetSelector.Replace("xxxx", (selector.StartIndex+index).ToString());
-                if (selector.IsNecessaryFileNumber)
-                {
-                    targetSelector = targetSelector.Replace("yyyy", Regex.Replace(targetUri.Segments[^1], @"\D", ""));
-                }
-                Debug.WriteLine($">>selector :{targetSelector}");
+                string candidateSelector = selector.Selectors[selectorIndex];
+                candidateSelector = adjustSelector(candidateSelector, selector, index, targetUri);
 
-                IHtmlImageElement? imageElement = targetDoc.QuerySelector(targetSelector) as IHtmlImageElement;
-                if (imageElement == null || imageElement.Source == null)
+                IHtmlImageElement? imageElement = targetDoc.QuerySelector(candidateSelector) as IHtmlImageElement;
+                if (imageElement == null || imageElement.Source == null) // imgタグではない、又はimgタグのsrcプロパティが存在しない場合、次の候補セレクターに回す
                 {
                     selectorIndex++;
                     continue;
@@ -92,50 +75,39 @@ namespace MangaDownloader.Models
                 index++;
             }
         }
+
         /// <summary>
-        /// 画像をダウンロードする
+        /// 取得したセレクターをuri情報で調整する
         /// </summary>
-        /// <param name="imageUris">ダウンロードする画像のURIのリスト</param>
+        /// <param name="candidateSelector">取得したセレクター</param>
+        /// <param name="selector">当該ホストのセレクター情報オブジェクト</param>
+        /// <param name="index"></param>
+        /// <param name="targetUri"></param>
         /// <returns></returns>
-        public async IAsyncEnumerable<Bitmap> DownloadImages(List<Uri> imageUris)
+        private static string adjustSelector(string candidateSelector, SelectorMember selector, int index, Uri? targetUri)
         {
-            foreach (var imageUri in imageUris)
+            candidateSelector = candidateSelector.Replace("xxxx", (selector.StartIndex + index).ToString());
+            if (selector.IsNecessaryFileNumber && targetUri != null)
             {
-                yield return await downloadImage(imageUri);
+                candidateSelector = candidateSelector.Replace("yyyy", Regex.Replace(targetUri.Segments[^1], @"\D", ""));
             }
+            Debug.WriteLine($">>Adjustted Selector :{candidateSelector}");
+
+            return candidateSelector;
         }
 
-        private async Task<Bitmap> downloadImage(Uri imageUri) 
+        public async Task<Bitmap> DownloadImage(Uri imageUri)
         {
             var res = await _httpClient.GetAsync(imageUri);
             if (!res.IsSuccessStatusCode)
             {
                 throw new FailedDownloadException($">>Can not get response: {res.StatusCode}");
             }
+
             using var stream = await res.Content.ReadAsStreamAsync();
             return new Bitmap(stream);
         }
 
-        public static string GenerateSaveDirPathFromUri(string baseDir, Uri uri)
-        {
-            string saveDirPath = Path.Combine(baseDir, "save", string.Join("", uri.Segments.Skip(1))); // 最初の"\"をスキップ
-
-            if (!string.IsNullOrEmpty(uri.Query))
-            {
-                saveDirPath = Path.Combine(saveDirPath, uri.Query.TrimStart('?'));
-            }
-
-            return Path.GetInvalidPathChars() // ディレクトリ名に使用できない不正な文字を取得
-                .Aggregate(saveDirPath, (dirPath, invalidChar) => dirPath.Replace(invalidChar.ToString(), ""));
-        }
-
-        public static void CreateSaveDir(string saveDirPath)
-        {
-            if (!Directory.Exists(saveDirPath))
-            {
-                Directory.CreateDirectory(saveDirPath);
-            }
-        }
 
         public void Dispose()
         {
@@ -147,5 +119,12 @@ namespace MangaDownloader.Models
     public class FailedDownloadException : Exception
     {
         public FailedDownloadException(string message) : base(message) { }
+    }
+
+    public enum DownloadState
+    {
+        NotDownloaded,
+        Downloading,
+        Finished
     }
 }
