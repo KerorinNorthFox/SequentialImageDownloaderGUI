@@ -10,6 +10,10 @@ namespace MangaDownloader.ViewModels
 {
     public partial class MangaListViewModel : ViewModelBase
     {
+        private int _selectedIndex = -1;
+
+        private bool _isDownloading = false;
+
         public MangaListViewModel()
         {
             if (Design.IsDesignMode)
@@ -19,19 +23,18 @@ namespace MangaDownloader.ViewModels
             }
 
             var isDeleteButtonEnabled = this.WhenAnyValue( // SelectedIndexが選択されているときにisDeleteButtonEnabledをtrueにする
-                selfVm => selfVm.SelectedIndex,
-                i => i >= 0);
-
+                x => x.SelectedIndex, x => x.IsDownloading,
+                (i, isDownloading) => i >= 0 && !isDownloading);
             RemoveMangaCommand = ReactiveCommand.Create(() => _removeManga(SelectedIndex), isDeleteButtonEnabled);
-            ClearMangaListCommand = ReactiveCommand.Create(ClearMangaList);
+
+            var canExecuteCommand = this.WhenAnyValue(x => x.IsDownloading, isDownloading => !isDownloading);
+            ClearMangaListCommand = ReactiveCommand.Create(ClearMangaList, canExecuteCommand);
         }
 
         /// <summary>
         /// Mangaのリスト
         /// </summary>
         public ObservableCollection<Manga> MangaList { get; private set; } = new ObservableCollection<Manga>();
-
-        private int _selectedIndex = -1;
 
         /// <summary>
         /// リスト内で選択されたタスクのインデックス
@@ -40,6 +43,12 @@ namespace MangaDownloader.ViewModels
         {
             get => _selectedIndex;
             set => this.RaiseAndSetIfChanged(ref _selectedIndex, value);
+        }
+
+        public bool IsDownloading
+        {
+            get => _isDownloading;
+            set => this.RaiseAndSetIfChanged(ref _isDownloading, value);
         }
 
         /// <summary>

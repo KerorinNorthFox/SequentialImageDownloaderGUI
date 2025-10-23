@@ -6,6 +6,12 @@ namespace MangaDownloader.ViewModels
 {
     public partial class InputUrlViewModel : ViewModelBase
     {
+        private string _inputUrlText = "";
+
+        private string _errorMessage = "";
+
+        private bool _isDownloading = false;
+
         /// <summary>
         /// URL入力時に実行する外部アクション
         /// </summary>
@@ -15,11 +21,20 @@ namespace MangaDownloader.ViewModels
         {
             _addUrlAction = addUrlAction;
 
-            AddUrlCommand = ReactiveCommand.Create(addUrl);
+            var canExecuteCommand = this.WhenAnyValue(x => x._isDownloading, isDownloading => !isDownloading);
+
+            AddUrlCommand = ReactiveCommand.Create(addUrl, canExecuteCommand);
             ClearInputUrlCommand = ReactiveCommand.Create(ClearInputUrl);
         }
 
-        private string _errorMessage = "";
+        /// <summary>
+        /// URLリストに追加するUrlのテキスト
+        /// </summary>
+        public string InputUrlText
+        {
+            get => _inputUrlText;
+            set => this.RaiseAndSetIfChanged(ref _inputUrlText, value);
+        }
 
         /// <summary>
         /// URLリストに追加するときのURLバリデーションのエラー文
@@ -30,15 +45,10 @@ namespace MangaDownloader.ViewModels
             set => this.RaiseAndSetIfChanged(ref _errorMessage, value);
         }
 
-        private string _inputUrlText = "";
-
-        /// <summary>
-        /// URLリストに追加するUrlのテキスト
-        /// </summary>
-        public string InputUrlText
+        public bool IsDownloading
         {
-            get => _inputUrlText;
-            set => this.RaiseAndSetIfChanged(ref _inputUrlText, value);
+            get => _isDownloading;
+            set => this.RaiseAndSetIfChanged(ref _isDownloading, value);
         }
 
         /// <summary>

@@ -1,6 +1,7 @@
 ﻿using MangaDownloader.Models;
 using MangaDownloader.Models.Config;
 using ReactiveUI;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -18,10 +19,7 @@ namespace MangaDownloader.ViewModels
 
         private Config _config;
 
-        /// <summary>
-        /// ダウンロード中かどうかのフラグ
-        /// </summary>
-        public bool IsDownloading = false;
+        private bool _isDownloading = false;
 
         /// <summary>
         /// 並列ダウンロード数の上限
@@ -33,20 +31,31 @@ namespace MangaDownloader.ViewModels
         public TaskManageViewModel(Config config)
         {
             _config = config;
-            _downloadSemaphore = new SemaphoreSlim(_maxConcurrentDownloads, _maxConcurrentDownloads);
-
             _downloader = new ImageDownloader(_config.SelectorJsonPath);
+            _downloadSemaphore = new SemaphoreSlim(_maxConcurrentDownloads, _maxConcurrentDownloads);
             InputUrlViewModel = new InputUrlViewModel(MangaListViewModel.AddManga);
 
-            StartDownloadCommand = ReactiveCommand.CreateFromTask(startDownload);
+            var canStartDownload = this.WhenAnyValue(x => x.IsDownloading, isDownloading => !isDownloading);
+            StartDownloadCommand = ReactiveCommand.CreateFromTask(startDownload, canStartDownload);
+
+            this.WhenAnyValue(x => x.IsDownloading)
+                .Subscribe(isDownloading =>
+                {
+                    InputUrlViewModel.IsDownloading = isDownloading;
+                    MangaListViewModel.IsDownloading = isDownloading;
+                });
+        }
+
+        public bool IsDownloading
+        {
+            get => _isDownloading;
+            set => this.RaiseAndSetIfChanged(ref _isDownloading, value);
         }
 
         public ICommand StartDownloadCommand { get; }
 
-
         private async Task startDownload()
         {
-            // TODO: IsDownloadフラグでダウンロードボタンとAddUriボタンを無効化, dl終了までにmangaListに変更を加えないようにする
             if (IsDownloading)
             {
                 return;
