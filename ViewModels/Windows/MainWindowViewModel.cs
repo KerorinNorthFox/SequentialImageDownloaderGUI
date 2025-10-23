@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MangaDownloader.Models.Config;
+using System;
 
 namespace MangaDownloader.ViewModels
 {
@@ -6,9 +7,12 @@ namespace MangaDownloader.ViewModels
     {
         public TaskManageViewModel TaskManageViewModel { get; }
 
+        private Config _config;
+
         public MainWindowViewModel()
         {
-            TaskManageViewModel = new TaskManageViewModel();
+            _config = new Config();
+            TaskManageViewModel = new TaskManageViewModel(_config);
         }
 
     }
