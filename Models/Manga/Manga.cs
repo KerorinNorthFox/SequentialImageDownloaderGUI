@@ -6,28 +6,30 @@ namespace MangaDownloader.Models
 {
     public class Manga
     {
-        public string MangaTitle { get; private set; } = string.Empty;
+        public string? Title { get; set; }
 
-        public Uri MangaUri { get; }
+        public Uri Uri { get; }
 
-        public string MangaAuthor { get; private set; } = string.Empty;
+        public string? Author { get; set; }
 
-        public string MangaAuthorCircleName { get; private set; } = string.Empty;
+        public string? AuthorCircleName { get; set; }
+
+        public Dictionary<int, Page> Pages { get; private set; } = new Dictionary<int, Page>();
+
+        /// <summary>
+        /// DL進捗状況
+        /// </summary>
+        public DownloadState State { get; private set; } = DownloadState.NotDownloaded;
 
         public Manga(Uri uri)
         {
-            MangaUri = uri;
+            Uri = uri;
         }
 
-
-        public Dictionary<int, Bitmap> Images { get; private set; } = new Dictionary<int, Bitmap>();
-
-        public void AddImageByIndex(int index, Bitmap image)
+        public void AddPageByIndex(int index, Uri uri, Bitmap image)
         {
-            Images.Add(index, image);
+            Pages.Add(index, new Page(uri, image));
         }
-
-        public DownloadState State { get; private set; }
 
         public void ChangeDownloadState(DownloadState state)
         {
