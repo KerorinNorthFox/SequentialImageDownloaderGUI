@@ -12,7 +12,9 @@ namespace MangaDownloader.Services
     {
         private IImageDownloader _downloader;
 
-        private IProgressEvents _progress;
+        private IProgressEvents _mangaProgress;
+
+        private IProgressEvents _imageProgress;
 
         private readonly int _maxConcurrentMangaDownloads = 10;
 
@@ -25,16 +27,19 @@ namespace MangaDownloader.Services
 
         private readonly SemaphoreSlim _imageDownloadSemaphore;
 
-        public MangaDownloadService(IImageDownloader downloader, IProgressEvents progress)
+        public MangaDownloadService(IImageDownloader downloader, IProgressEvents mangaProgress, IProgressEvents imageProgress)
         {
             _downloader = downloader;
-            _progress = progress;
+            _mangaProgress = mangaProgress;
+            _imageProgress = imageProgress;
             _mangaDownloadSemaphore = new SemaphoreSlim(_maxConcurrentMangaDownloads, _maxConcurrentMangaDownloads);
             _imageDownloadSemaphore = new SemaphoreSlim(_maxConcurrentImageDownloads, _maxConcurrentImageDownloads);
         }
 
         public async Task DownloadAll(IEnumerable<Manga> mangaList)
         {
+            var mangaCount = mangaList.ToList().Count;
+            _mangaProgress.OnInitializeProgress(mangaCount);
             var downloadTasks = mangaList.Where(m => m.State == DownloadStatus.Pending || m.State == DownloadStatus.Failed)
                 .Select(async manga =>
                 {
@@ -50,6 +55,7 @@ namespace MangaDownloader.Services
                     finally
                     {
                         _mangaDownloadSemaphore.Release();
+                        _mangaProgress.OnUpdateProgress(1);
                     }
                 });
 
@@ -62,6 +68,7 @@ namespace MangaDownloader.Services
 
             var doc = await _downloader.GetDocument(manga.Uri);
             var imageUris = _downloader.ParsePageUri(doc, manga.Uri);
+            _imageProgress.OnInitializeProgress(imageUris.ToList().Count);
             var imageDownloadTasks = imageUris.Select(async (uri, index) =>
             {
                 await _imageDownloadSemaphore.WaitAsync();
@@ -73,6 +80,7 @@ namespace MangaDownloader.Services
                 finally
                 {
                     _imageDownloadSemaphore.Release();
+                    _imageProgress.OnUpdateProgress(1);
                 }
             });
             var results = await Task.WhenAll(imageDownloadTasks);

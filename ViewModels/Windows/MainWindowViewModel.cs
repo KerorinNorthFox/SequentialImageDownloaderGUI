@@ -15,20 +15,28 @@ namespace MangaDownloader.ViewModels
 
         private Config _config;
 
-        private DownloadProgressEvents _progress;
+        private DownloadProgressEvents _mangaDownloadProgressEvents;
+
+        private DownloadProgressEvents _imageDownloadProgressEvents;
 
         public MainWindowViewModel()
         {
             _config = new Config();
-            _progress = new DownloadProgressEvents()
+            _mangaDownloadProgressEvents = new DownloadProgressEvents()
                 .Subscribe(
-                    ProgressBarViewModel.InitializeProgress,
-                    ProgressBarViewModel.UpdateProgress,
-                    ProgressBarViewModel.ResetProgress
+                    ProgressBarViewModel.MangaDownloadProgress.InitializeProgress,
+                    ProgressBarViewModel.MangaDownloadProgress.UpdateProgress,
+                    ProgressBarViewModel.MangaDownloadProgress.ResetProgress
+                    );
+            _imageDownloadProgressEvents = new DownloadProgressEvents()
+                .Subscribe(
+                    ProgressBarViewModel.ImageDownloadProgress.InitializeProgress,
+                    ProgressBarViewModel.ImageDownloadProgress.UpdateProgress,
+                    ProgressBarViewModel.ImageDownloadProgress.ResetProgress
                     );
 
             TaskManageViewModel = new TaskManageViewModel(
-                    new MangaDownloadService(new ImageDownloader(_config.SelectorJsonPath), _progress)
+                    new MangaDownloadService(new ImageDownloader(_config.SelectorJsonPath), _mangaDownloadProgressEvents, _imageDownloadProgressEvents)
                 );
         }
 
