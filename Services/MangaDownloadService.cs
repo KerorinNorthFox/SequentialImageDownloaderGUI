@@ -36,7 +36,7 @@ namespace MangaDownloader.Services
             _imageDownloadSemaphore = new SemaphoreSlim(_maxConcurrentImageDownloads, _maxConcurrentImageDownloads);
         }
 
-        public async Task DownloadAll(IEnumerable<Manga> mangaList)
+        public async Task DownloadAllAsync(IEnumerable<Manga> mangaList)
         {
             var mangaCount = mangaList.ToList().Count;
             _mangaProgress.OnInitializeProgress(mangaCount);
@@ -46,7 +46,7 @@ namespace MangaDownloader.Services
                     await _mangaDownloadSemaphore.WaitAsync();
                     try
                     {
-                        await Download(manga);
+                        await DownloadAsync(manga);
                     }
                     catch (FailedDownloadException e)
                     {
@@ -62,7 +62,7 @@ namespace MangaDownloader.Services
             await Task.WhenAll(downloadTasks);
         }
 
-        public async Task Download(Manga manga)
+        public async Task DownloadAsync(Manga manga)
         {
             manga.ChangeDownloadState(DownloadStatus.Downloading);
 

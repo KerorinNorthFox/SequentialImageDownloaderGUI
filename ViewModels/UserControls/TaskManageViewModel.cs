@@ -48,7 +48,7 @@ namespace MangaDownloader.ViewModels
 
             IsDownloading = true;
 
-            await _service.DownloadAll(MangaListViewModel.MangaList);
+            await _service.DownloadAllAsync(MangaListViewModel.MangaList);
 
             IsDownloading = false;
         }

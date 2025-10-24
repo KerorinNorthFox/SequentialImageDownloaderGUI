@@ -7,8 +7,8 @@ namespace MangaDownloader.Services
 {
     public interface IDownloadService
     {
-        Task DownloadAll(IEnumerable<Manga> mangaList);
+        Task DownloadAllAsync(IEnumerable<Manga> mangaList);
 
-        Task Download(Manga manga);
+        Task DownloadAsync(Manga manga);
     }
 }
