@@ -1,13 +1,14 @@
 ﻿using MangaDownloader.Models;
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace MangaDownloader.Services
 {
     public interface IDownloadService
     {
-        void DownloadAll(IList<Manga> mangaList);
+        Task DownloadAll(IEnumerable<Manga> mangaList);
 
-        void Download(Manga manga);
+        Task Download(Manga manga);
     }
 }

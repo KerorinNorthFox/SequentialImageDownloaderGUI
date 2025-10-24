@@ -1,4 +1,5 @@
-﻿using MangaDownloader.Models.Config;
+﻿using MangaDownloader.Models;
+using MangaDownloader.Models.Config;
 using MangaDownloader.Models.Events;
 using MangaDownloader.Services;
 using MangaDownloader.ViewModels.UserControls;
@@ -24,8 +25,11 @@ namespace MangaDownloader.ViewModels
                     ProgressBarViewModel.InitializeProgress,
                     ProgressBarViewModel.UpdateProgress,
                     ProgressBarViewModel.ResetProgress
+                    );
+
+            TaskManageViewModel = new TaskManageViewModel(
+                    new MangaDownloadService(new ImageDownloader(_config.SelectorJsonPath), _progress)
                 );
-            TaskManageViewModel = new TaskManageViewModel(_config, new MangaDownloadService(_progress));
         }
 
     }
