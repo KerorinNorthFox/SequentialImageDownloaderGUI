@@ -2,7 +2,7 @@
 
 namespace MangaDownloader.Models.Events
 {
-    internal class DownloadProgressEvents : IProgressEvents
+    public class DownloadProgressEvents : IProgressEvents
     {
         private event Action<int>? _initializeEvent;
 
