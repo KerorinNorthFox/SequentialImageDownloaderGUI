@@ -1,6 +1,7 @@
 ﻿using MangaDownloader.Services;
 using ReactiveUI;
 using System;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -20,7 +21,10 @@ namespace MangaDownloader.ViewModels
             _service = service;
             InputUrlViewModel = new InputUrlViewModel(MangaListViewModel.AddManga);
 
-            var canStartDownload = this.WhenAnyValue(x => x.IsDownloading, x => x.MangaListViewModel.MangaList, (isDownloading, mangaList) => !isDownloading && mangaList.Count > 0);
+            var canStartDownload = this.WhenAnyValue(x => x.IsDownloading)
+                .CombineLatest(
+                    MangaListViewModel.MangaList.WhenAnyValue(x => x.Count),
+                    (isDownloading, count) => !isDownloading && count > 0);
             StartDownloadCommand = ReactiveCommand.CreateFromTask(startDownload, canStartDownload);
 
             this.WhenAnyValue(x => x.IsDownloading)
