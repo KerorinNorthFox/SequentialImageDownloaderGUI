@@ -1,5 +1,6 @@
 ﻿using MangaDownloader.Models;
 using MangaDownloader.Models.Config;
+using MangaDownloader.Services;
 using ReactiveUI;
 using System;
 using System.Linq;
@@ -17,6 +18,8 @@ namespace MangaDownloader.ViewModels
 
         private ImageDownloader _downloader;
 
+        private IDownloadService _service;
+
         private Config _config;
 
         private bool _isDownloading = false;
@@ -28,14 +31,15 @@ namespace MangaDownloader.ViewModels
 
         private readonly SemaphoreSlim _downloadSemaphore;
 
-        public TaskManageViewModel(Config config)
+        public TaskManageViewModel(Config config, IDownloadService service)
         {
             _config = config;
+            _service = service;
             _downloader = new ImageDownloader(_config.SelectorJsonPath);
             _downloadSemaphore = new SemaphoreSlim(_maxConcurrentDownloads, _maxConcurrentDownloads);
             InputUrlViewModel = new InputUrlViewModel(MangaListViewModel.AddManga);
 
-            var canStartDownload = this.WhenAnyValue(x => x.IsDownloading, isDownloading => !isDownloading);
+            var canStartDownload = this.WhenAnyValue(x => x.IsDownloading, x => x.MangaListViewModel.MangaList, (isDownloading, mangaList) => !isDownloading && mangaList.Count > 0);
             StartDownloadCommand = ReactiveCommand.CreateFromTask(startDownload, canStartDownload);
 
             this.WhenAnyValue(x => x.IsDownloading)
@@ -61,14 +65,9 @@ namespace MangaDownloader.ViewModels
                 return;
             }
 
-            var mangaList = MangaListViewModel.MangaList;
-            if (mangaList.Count <= 0)
-            {
-                return;
-            }
-
             IsDownloading = true;
 
+            var mangaList = MangaListViewModel.MangaList;
             for (int i = 0; i < mangaList.Count; i++)
             {
                 try

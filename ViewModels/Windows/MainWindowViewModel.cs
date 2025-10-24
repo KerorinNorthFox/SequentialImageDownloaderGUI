@@ -1,4 +1,7 @@
 ﻿using MangaDownloader.Models.Config;
+using MangaDownloader.Models.Events;
+using MangaDownloader.Services;
+using MangaDownloader.ViewModels.UserControls;
 using System;
 
 namespace MangaDownloader.ViewModels
@@ -7,12 +10,22 @@ namespace MangaDownloader.ViewModels
     {
         public TaskManageViewModel TaskManageViewModel { get; }
 
+        public ProgressBarViewModel ProgressBarViewModel { get; } = new ProgressBarViewModel();
+
         private Config _config;
+
+        private DownloadProgressEvents _progress;
 
         public MainWindowViewModel()
         {
             _config = new Config();
-            TaskManageViewModel = new TaskManageViewModel(_config);
+            _progress = new DownloadProgressEvents()
+                .Subscribe(
+                    ProgressBarViewModel.InitializeProgress,
+                    ProgressBarViewModel.UpdateProgress,
+                    ProgressBarViewModel.ResetProgress
+                );
+            TaskManageViewModel = new TaskManageViewModel(_config, new MangaDownloadService(_progress));
         }
 
     }
