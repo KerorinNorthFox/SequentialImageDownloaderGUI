@@ -21,7 +21,7 @@ namespace MangaDownloader.ViewModels
         {
             _addUrlAction = addUrlAction;
 
-            var canExecuteCommand = this.WhenAnyValue(x => x._isDownloading, isDownloading => !isDownloading);
+            var canExecuteCommand = this.WhenAnyValue(x => x.IsDownloading, isDownloading => !isDownloading);
 
             AddUrlCommand = ReactiveCommand.Create(addUrl, canExecuteCommand);
             ClearInputUrlCommand = ReactiveCommand.Create(ClearInputUrl);
