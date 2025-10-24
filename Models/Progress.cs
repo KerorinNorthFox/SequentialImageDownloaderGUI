@@ -4,18 +4,18 @@ namespace MangaDownloader.Models
 {
     public class Progress : ReactiveObject
     {
-        private int _maxValue = 0;
+        private int _maximumValue = 0;
 
         private int _currentValue = 0;
 
-        public int Max
+        public int Maximum
         {
-            get => _maxValue;
-            set
+            get => _maximumValue;
+            private set
             {
                 if (value >= 0)
                 {
-                    this.RaiseAndSetIfChanged(ref _maxValue, value);
+                    this.RaiseAndSetIfChanged(ref _maximumValue, value);
                 }
             }
         }
@@ -23,7 +23,7 @@ namespace MangaDownloader.Models
         public int Current
         {
             get => _currentValue;
-            set
+            private set
             {
                 if (value >= 0)
                 {
@@ -35,7 +35,7 @@ namespace MangaDownloader.Models
         public void InitializeProgress(int maxValue)
         {
             ResetProgress();
-            Max = maxValue;
+            Maximum = maxValue;
         }
 
         public void UpdateProgress(int addingValue)
@@ -45,7 +45,7 @@ namespace MangaDownloader.Models
 
         public void ResetProgress()
         {
-            Max = 0;
+            Maximum = 0;
             Current = 0;
         }
     }
