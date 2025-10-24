@@ -18,21 +18,11 @@ namespace MangaDownloader.Models
 
         private IBrowsingContext _context = BrowsingContext.New(Configuration.Default.WithDefaultLoader());
 
-        private Selectors _selectors;
+        private ISelectorProvider _selectors;
 
-        public ImageDownloader(string selectorJsonPath)
+        public ImageDownloader(ISelectorProvider selectors)
         {
-#if DEBUG
-            // Assetsファイルのパスを参照する
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory; // \MangaDownloader\bin\Debug\new8.0
-            var projectRootDir = Directory.GetParent(baseDir)?.Parent?.Parent?.Parent?.FullName; // \MangaDownloder\
-            var jsonPath = Path.Combine(projectRootDir!, "Assets", "selector.json"); // \MangaDownloader\Assets\selector.json
-#else
-            // TODO :本番環境ではAppDataを参照する
-            //       AppDataにフォルダを作るコードを書く必要あり？
-            var jsonPath = selectorJsonPath;
-#endif
-            _selectors = new Selectors(jsonPath);
+            _selectors = selectors;
         }
 
         public async Task<IDocument> GetDocument(Uri uri)

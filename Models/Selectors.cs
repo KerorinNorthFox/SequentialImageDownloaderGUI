@@ -9,13 +9,18 @@ namespace MangaDownloader.Models
     // <summary>
     // ドメインを指定することでセレクターを選択できる辞書クラス
     // <\summary>
-    internal class Selectors : Dictionary<string, SelectorMember>
+    public class Selectors : Dictionary<string, SelectorMember>, ISelectorProvider
     {
         private string _selectorJsonPath;
 
         public Selectors(string selectorJsonPath)
         {
             _selectorJsonPath = selectorJsonPath;
+            Load();
+        }
+
+        public void Load()
+        {
             load(_selectorJsonPath);
         }
 
