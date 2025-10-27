@@ -14,6 +14,7 @@ namespace MangaDownloader.Models
 
         Task<Bitmap> DownloadImage(Uri imageUri);
 
+        Task<string> GetTitle(IDocument targetDoc, SelectorMember selector);
 
     }
 }

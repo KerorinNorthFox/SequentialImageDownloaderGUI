@@ -97,6 +97,10 @@ namespace MangaDownloader.Models
             return new Bitmap(stream);
         }
 
+        public async Task<string> GetTitle(IDocument targetDoc, SelectorMember selector)
+        {
+
+        }
 
         public void Dispose()
         {
