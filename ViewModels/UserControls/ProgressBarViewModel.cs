@@ -1,6 +1,6 @@
 ﻿using MangaDownloader.Models;
 
-namespace MangaDownloader.ViewModels.UserControls
+namespace MangaDownloader.ViewModels
 {
     public class ProgressBarViewModel : ViewModelBase
     {

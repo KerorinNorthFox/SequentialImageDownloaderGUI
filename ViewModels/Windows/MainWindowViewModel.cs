@@ -2,7 +2,6 @@
 using MangaDownloader.Models.Config;
 using MangaDownloader.Models.Events;
 using MangaDownloader.Services;
-using MangaDownloader.ViewModels.UserControls;
 using System;
 using System.IO;
 

@@ -33,38 +33,7 @@
 			</MenuItem>
 		</Menu>
 
-		<Border DockPanel.Dock="Bottom"
-				Padding="10, 0"
-				Background="#007acc"
-				>
-			<Grid Height="25">
-				<Grid.ColumnDefinitions>
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="Auto" />
-					<ColumnDefinition Width="*" />
-				</Grid.ColumnDefinitions>
-
-				<Label Grid.Column="0"
-					   VerticalAlignment="Center"
-					   FontSize="12"
-					   Foreground="WhiteSmoke"
-					   >
-					Download status
-				</Label>
-				<ProgressBar Grid.Column="1"
-							 VerticalAlignment="Center"
-							 Margin="10, 0"
-							 />
-				<Label Grid.Column="2"
-					   HorizontalAlignment="Right"
-					   VerticalAlignment="Center"
-					   FontSize="12"
-					   Foreground="WhiteSmoke"
-					   >
-					status
-				</Label>
-			</Grid>
-		</Border>
+		<views:ProgressBarView DockPanel.Dock="Bottom" />
 
 		<Grid>
 			<Grid.ColumnDefinitions>

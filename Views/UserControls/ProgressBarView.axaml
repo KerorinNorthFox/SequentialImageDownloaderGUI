@@ -1,0 +1,29 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+			 xmlns:vm="using:MangaDownloader.ViewModels"
+			 mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="25"
+			 x:Class="MangaDownloader.Views.ProgressBarView"
+			 x:DataType="vm:ProgressBarViewModel"
+			 >
+	<Border Padding="10, 0" Background="#007acc">
+		<StackPanel Orientation="Horizontal">
+			<Label FontSize="12" Content="Manga DL status" Foreground="WhiteSmoke"/>
+			<ProgressBar Foreground="Orange" Maximum="{Binding MangaDownloadProgress.Maximum}" Value="{Binding MangaDownloadProgress.Current}" />
+			<StackPanel Orientation="Horizontal" Margin="10, 0">
+				<Label Content="{Binding MangaDownloadProgress.Current}" Foreground="WhiteSmoke"/>
+				<Label Content="/" Foreground="WhiteSmoke"/>
+				<Label Content="{Binding MangaDownloadProgress.Maximum}" Foreground="WhiteSmoke"/>
+			</StackPanel>
+
+			<Label Content="Image DL status" Foreground="WhiteSmoke"/>
+			<ProgressBar Foreground="Yellow" Maximum="{Binding ImageDownloadProgress.Maximum}" Value="{Binding ImageDownloadProgress.Current}" />
+			<StackPanel Orientation="Horizontal" Margin="10, 0">
+				<Label Content="{Binding ImageDownloadProgress.Current}" Foreground="WhiteSmoke"/>
+				<Label Content="/" Foreground="WhiteSmoke"/>
+				<Label Content="{Binding ImageDownloadProgress.Maximum}" Foreground="WhiteSmoke"/>
+			</StackPanel>
+		</StackPanel>
+	</Border>
+</UserControl>
