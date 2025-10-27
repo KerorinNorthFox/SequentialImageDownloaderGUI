@@ -99,7 +99,7 @@ namespace MangaDownloader.Models
 
         public async Task<string> GetTitle(IDocument targetDoc, SelectorMember selector)
         {
-
+            return "";
         }
 
         public void Dispose()
