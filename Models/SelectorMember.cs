@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 namespace MangaDownloader.Models
 {
-    [JsonObject("Selector")]
+    [JsonObject("selector")]
     public class SelectorMember
     {
-        [JsonProperty("Host")]
+        [JsonProperty("host")]
         public string Host { get; set; } = string.Empty;
 
-        [JsonProperty("Selectors")]
+        [JsonProperty("selectors")]
         public List<string> Selectors { get; set; } = new List<string>();
 
-        [JsonProperty("StartIndex")]
+        [JsonProperty("startIndex")]
         public int StartIndex { get; set; }
 
-        [JsonProperty("IsNecessaryFileNumber")]
+        [JsonProperty("isNecessaryFileNumber")]
         public bool IsNecessaryFileNumber { get; set; }
 
     }

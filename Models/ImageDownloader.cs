@@ -73,10 +73,10 @@ namespace MangaDownloader.Models
         /// <param name="index"></param>
         /// <param name="targetUri"></param>
         /// <returns></returns>
-        private static string adjustSelector(string candidateSelector, SelectorMember selector, int index, Uri? targetUri)
+        private static string adjustSelector(string candidateSelector, SelectorMember selector, int index, Uri targetUri)
         {
             candidateSelector = candidateSelector.Replace("xxxx", (selector.StartIndex + index).ToString());
-            if (selector.IsNecessaryFileNumber && targetUri != null)
+            if (selector.IsNecessaryFileNumber)
             {
                 candidateSelector = candidateSelector.Replace("yyyy", Regex.Replace(targetUri.Segments[^1], @"\D", ""));
             }
