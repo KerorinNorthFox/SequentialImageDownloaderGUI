@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace MangaDownloader.ViewModels
+namespace MangaDownloader.Desktop.ViewModels
 {
     public class ViewModelBase : ReactiveObject
     {

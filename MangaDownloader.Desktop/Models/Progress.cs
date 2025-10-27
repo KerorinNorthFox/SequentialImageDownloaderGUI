@@ -1,6 +1,6 @@
 ﻿using ReactiveUI;
 
-namespace MangaDownloader.Models
+namespace MangaDownloader.Desktop.Models
 {
     public class Progress : ReactiveObject
     {

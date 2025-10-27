@@ -2,7 +2,7 @@
 using System;
 using System.Windows.Input;
 
-namespace MangaDownloader.ViewModels
+namespace MangaDownloader.Desktop.ViewModels
 {
     public partial class InputUrlViewModel : ViewModelBase
     {

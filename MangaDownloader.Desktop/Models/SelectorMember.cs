@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
 
-namespace MangaDownloader.Models
+namespace MangaDownloader.Desktop.Models
 {
     [JsonObject("selector")]
     public class SelectorMember

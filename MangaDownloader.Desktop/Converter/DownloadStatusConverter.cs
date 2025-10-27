@@ -1,10 +1,10 @@
 ﻿using Avalonia.Data.Converters;
 using Avalonia.Media;
-using MangaDownloader.Models;
+using MangaDownloader.Desktop.Models;
 using System;
 using System.Globalization;
 
-namespace MangaDownloader.Converter
+namespace MangaDownloader.Desktop.Converter
 {
     public class DownloadStatusToIconConverter : IValueConverter
     {

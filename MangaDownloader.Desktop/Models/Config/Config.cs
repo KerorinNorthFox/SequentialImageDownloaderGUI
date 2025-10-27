@@ -1,6 +1,6 @@
 ﻿using System.Configuration;
 
-namespace MangaDownloader.Models.Config
+namespace MangaDownloader.Desktop.Models.Config
 {
     public class Config
     {

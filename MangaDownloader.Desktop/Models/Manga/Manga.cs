@@ -3,7 +3,7 @@ using ReactiveUI;
 using System;
 using System.Collections.Generic;
 
-namespace MangaDownloader.Models
+namespace MangaDownloader.Desktop.Models
 {
     public class Manga : ReactiveObject, IDisposable
     {

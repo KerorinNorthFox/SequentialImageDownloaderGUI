@@ -1,12 +1,11 @@
-﻿using MangaDownloader.Models;
-using MangaDownloader.Models.Events;
-using System;
+﻿using MangaDownloader.Desktop.Models;
+using MangaDownloader.Desktop.Models.Events;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace MangaDownloader.Services
+namespace MangaDownloader.Desktop.Services
 {
     public class MangaDownloadService : IDownloadService
     {

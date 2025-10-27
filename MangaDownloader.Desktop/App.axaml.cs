@@ -1,12 +1,11 @@
 using Avalonia;
 using Avalonia.Controls.ApplicationLifetimes;
-using Avalonia.Data.Core;
 using Avalonia.Data.Core.Plugins;
 using Avalonia.Markup.Xaml;
-using MangaDownloader.ViewModels;
-using MangaDownloader.Views;
+using MangaDownloader.Desktop.ViewModels;
+using MangaDownloader.Desktop.Views;
 
-namespace MangaDownloader
+namespace MangaDownloader.Desktop
 {
     public partial class App : Application
     {

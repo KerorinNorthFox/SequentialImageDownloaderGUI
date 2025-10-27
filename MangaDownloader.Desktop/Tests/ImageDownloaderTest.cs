@@ -1,12 +1,6 @@
-﻿using MangaDownloader.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
+﻿using Xunit;
 
-namespace MangaDownloader.Tests
+namespace MangaDownloader.Desktop.Tests
 {
     public class ImageDownloaderTest
     {

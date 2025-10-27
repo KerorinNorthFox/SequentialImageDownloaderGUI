@@ -1,6 +1,5 @@
-﻿using System;
-
-namespace MangaDownloader.Models.Events
+﻿
+namespace MangaDownloader.Desktop.Models.Events
 {
     public interface IProgressEvents
     {

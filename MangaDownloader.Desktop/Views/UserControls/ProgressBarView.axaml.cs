@@ -1,6 +1,6 @@
 using Avalonia.Controls;
 
-namespace MangaDownloader.Views;
+namespace MangaDownloader.Desktop.Views;
 
 public partial class ProgressBarView : UserControl
 {

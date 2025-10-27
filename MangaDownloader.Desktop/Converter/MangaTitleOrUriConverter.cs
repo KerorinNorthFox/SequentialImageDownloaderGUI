@@ -1,11 +1,11 @@
 ﻿using Avalonia.Data;
 using Avalonia.Data.Converters;
-using MangaDownloader.Models;
+using MangaDownloader.Desktop.Models;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace MangaDownloader.Converter
+namespace MangaDownloader.Desktop.Converter
 {
     // MangaTaskのタイトルが設定されてない場合、Uriを返すコンバーター
     public class MangaTitleOrUriConverter : IMultiValueConverter

@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace MangaDownloader.Converter
+namespace MangaDownloader.Desktop.Converter
 {
     public class IndexConverter : IMultiValueConverter
     {

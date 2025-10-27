@@ -1,11 +1,11 @@
-﻿using MangaDownloader.Models;
-using MangaDownloader.Models.Config;
-using MangaDownloader.Models.Events;
-using MangaDownloader.Services;
+﻿using MangaDownloader.Desktop.Models;
+using MangaDownloader.Desktop.Models.Config;
+using MangaDownloader.Desktop.Models.Events;
+using MangaDownloader.Desktop.Services;
 using System;
 using System.IO;
 
-namespace MangaDownloader.ViewModels
+namespace MangaDownloader.Desktop.ViewModels
 {
     public partial class MainWindowViewModel : ViewModelBase
     {

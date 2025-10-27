@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace MangaDownloader.Models
+namespace MangaDownloader.Desktop.Models
 {
     public interface ISelectorProvider : IDictionary<string, SelectorMember>
     {

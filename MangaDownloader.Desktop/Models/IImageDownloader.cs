@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MangaDownloader.Models
+namespace MangaDownloader.Desktop.Models
 {
     public interface IImageDownloader
     {

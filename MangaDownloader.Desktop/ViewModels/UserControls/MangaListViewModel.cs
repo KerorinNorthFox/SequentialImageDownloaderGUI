@@ -1,12 +1,12 @@
 ﻿using Avalonia.Controls;
-using MangaDownloader.Models;
+using MangaDownloader.Desktop.Models;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
-namespace MangaDownloader.ViewModels
+namespace MangaDownloader.Desktop.ViewModels
 {
     public partial class MangaListViewModel : ViewModelBase
     {
@@ -97,11 +97,11 @@ namespace MangaDownloader.ViewModels
             {
                 return;
             }
-            
+
             // 削除前にリソースを解放
             var manga = MangaList[index];
             manga?.Dispose();
-            
+
             MangaList.RemoveAt(index);
         }
     }

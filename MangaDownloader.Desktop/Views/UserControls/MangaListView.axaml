@@ -3,10 +3,10 @@
 			 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
 			 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
 			 xmlns:iconPacks="https://github.com/MahApps/IconPacks.Avalonia"
-			 xmlns:vm="using:MangaDownloader.ViewModels"
-			 xmlns:conv="using:MangaDownloader.Converter"
+			 xmlns:vm="using:MangaDownloader.Desktop.ViewModels"
+			 xmlns:conv="using:MangaDownloader.Desktop.Converter"
 			 mc:Ignorable="d" d:DesignWidth="250" d:DesignHeight="500"
-			 x:Class="MangaDownloader.Views.MangaListView"
+			 x:Class="MangaDownloader.Desktop.Views.MangaListView"
 			 x:DataType="vm:MangaListViewModel"
 			 >
 	<UserControl.Resources>

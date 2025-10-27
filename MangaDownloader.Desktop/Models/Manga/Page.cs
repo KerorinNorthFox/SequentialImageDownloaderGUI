@@ -1,7 +1,7 @@
 ﻿using Avalonia.Media.Imaging;
 using System;
 
-namespace MangaDownloader.Models
+namespace MangaDownloader.Desktop.Models
 {
     public class Page : IDisposable
     {

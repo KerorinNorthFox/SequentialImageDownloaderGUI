@@ -1,9 +1,8 @@
-﻿using MangaDownloader.Models;
-using System;
+﻿using MangaDownloader.Desktop.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace MangaDownloader.Services
+namespace MangaDownloader.Desktop.Services
 {
     public interface IDownloadService
     {

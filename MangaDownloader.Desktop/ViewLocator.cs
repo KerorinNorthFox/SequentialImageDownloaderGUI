@@ -1,9 +1,9 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
-using MangaDownloader.ViewModels;
+using MangaDownloader.Desktop.ViewModels;
 using System;
 
-namespace MangaDownloader
+namespace MangaDownloader.Desktop
 {
     public class ViewLocator : IDataTemplate
     {

@@ -2,7 +2,7 @@
 using Avalonia.ReactiveUI;
 using System;
 
-namespace MangaDownloader
+namespace MangaDownloader.Desktop
 {
     internal sealed class Program
     {

@@ -1,11 +1,11 @@
-﻿using MangaDownloader.Services;
+﻿using MangaDownloader.Desktop.Services;
 using ReactiveUI;
 using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace MangaDownloader.ViewModels
+namespace MangaDownloader.Desktop.ViewModels
 {
     public partial class TaskManageViewModel : ViewModelBase
     {

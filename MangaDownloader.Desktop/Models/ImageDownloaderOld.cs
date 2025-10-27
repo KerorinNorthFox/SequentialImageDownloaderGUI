@@ -11,7 +11,7 @@ using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace MangaDownloader.Models
+namespace MangaDownloader.Desktop.Models
 {
     public class ImageDownloaderOld : IDisposable
     {

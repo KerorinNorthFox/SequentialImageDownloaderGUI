@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
-namespace MangaDownloader.Models
+namespace MangaDownloader.Desktop.Models
 {
     // <summary>
     // ドメインを指定することでセレクターを選択できる辞書クラス
