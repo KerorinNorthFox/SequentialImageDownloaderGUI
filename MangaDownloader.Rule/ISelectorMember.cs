@@ -1,15 +1,13 @@
 ﻿
 namespace MangaDownloader.Rule
 {
-    public interface IMember
+    public interface ISelectorMember
     {
         string Domain { get; }
 
-        List<string> Selectors { get; }
+        List<string> ImageSelectors { get; }
 
         int StartNthChildIndex { get; }
-
-        Boolean IsNecessaryFileNumber { get; }
 
         string TitleSelector { get; }
 

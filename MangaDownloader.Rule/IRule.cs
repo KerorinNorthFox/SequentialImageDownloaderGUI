@@ -19,8 +19,8 @@ namespace MangaDownloader.Rule
         /// <returns></returns>
         IEnumerable<Uri> ParsePageUri(IDocument targetDoc, string? pageId);
 
-        Task<string> GetTitle();
+        string? GetTitle(IDocument targetDoc);
 
-        Task<string> GetAuthor();
+        string? GetAuthor(IDocument targetDoc);
     }
 }

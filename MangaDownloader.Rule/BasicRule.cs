@@ -1,23 +1,21 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
-using System.Diagnostics;
-using System.Text.RegularExpressions;
 
 namespace MangaDownloader.Rule
 {
-    public class BasicRule : IRule
+    public class BasicRule : IDisposable, IRule
     {
-        private IMember _member;
+        private ISelectorMember _selector;
 
         private IBrowsingContext _context = BrowsingContext.New(Configuration.Default.WithDefaultLoader());
 
-        public BasicRule(IMember member)
+        public BasicRule(ISelectorMember selector)
         {
-            _member = member;
+            _selector = selector;
         }
 
-        public async Task<IDocument> GetDocument(Uri pageUri)
+        public virtual async Task<IDocument> GetDocument(Uri pageUri)
         {
             try
             {
@@ -29,19 +27,19 @@ namespace MangaDownloader.Rule
             }
         }
 
-        public IEnumerable<Uri> ParsePageUri(IDocument targetDoc, string? pageId)
+        public virtual IEnumerable<Uri> ParsePageUri(IDocument targetDoc, string? pageId)
         {
             int index = 0;
             int selectorIndex = 0;
             while (true)
             {
-                if (_member.Selectors.Count <= selectorIndex) // 候補セレクターを全て回したらbreak
+                if (_selector.ImageSelectors.Count <= selectorIndex) // 候補セレクターを全て回したらbreak
                 {
                     break;
                 }
 
-                string candidateSelector = _member.Selectors[selectorIndex];
-                candidateSelector = adjustSelector(candidateSelector, index, pageId);
+                string candidateSelector = _selector.ImageSelectors[selectorIndex];
+                candidateSelector = replaceSelector(candidateSelector, index, pageId);
 
                 IHtmlImageElement? imageElement = targetDoc.QuerySelector(candidateSelector) as IHtmlImageElement;
                 if (imageElement == null || imageElement.Source == null) // imgタグではない、又はimgタグのsrcプロパティが存在しない場合、次の候補セレクターに回す
@@ -56,42 +54,40 @@ namespace MangaDownloader.Rule
         }
 
         /// <summary>
-        /// 取得したセレクターをuri情報で調整する
+        /// 取得したセレクターをindexで置き換えて回す
         /// </summary>
         /// <param name="candidateSelector">取得したセレクター</param>
-        /// <param name="selector">当該ホストのセレクター情報オブジェクト</param>
         /// <param name="index"></param>
-        /// <param name="targetUri"></param>
+        /// <param name="pageId"></param>
         /// <returns></returns>
-        private string adjustSelector(string candidateSelector, int index, string? pageId)
+        protected virtual string replaceSelector(string candidateSelector, int index, string? pageId)
         {
-            candidateSelector = candidateSelector.Replace("xxxx", (_member.StartNthChildIndex + index).ToString());
-            if (_member.IsNecessaryFileNumber && pageId != null)
+            return candidateSelector.Replace("xxxx", (_selector.StartNthChildIndex + index).ToString());
+        }
+
+        public virtual string? GetTitle(IDocument targetDoc)
+        {
+            return getTextContent(targetDoc, _selector.TitleSelector);
+        }
+
+        public virtual string? GetAuthor(IDocument targetDoc)
+        {
+            return getTextContent(targetDoc, _selector.AuthorSelector);
+        }
+
+        private string? getTextContent(IDocument targetDoc, string selector)
+        {
+            IHtmlElement? elem = targetDoc.QuerySelector(selector) as IHtmlElement;
+            if (elem == null || elem.TextContent == null)
             {
-                candidateSelector = candidateSelector.Replace("yyyy", Regex.Replace(pageId, @"\D", "")); // pageIdの取得：targetUri.Segments[^1]
+                return null;
             }
-            else if (_member.IsNecessaryFileNumber && pageId == null)
-            {
-                throw new PageIdRequiredException(">>pageId is null.");
-            }
-            Debug.WriteLine($">>Adjustted Selector :{candidateSelector}");
-
-            return candidateSelector;
+            return elem.TextContent;
         }
 
-        public async Task<string> GetTitle()
+        public void Dispose()
         {
-            return "";
+            _context.Dispose();
         }
-
-        public async Task<string> GetAuthor()
-        {
-            return "";
-        }
-    }
-
-    public class PageIdRequiredException : Exception
-    {
-        public PageIdRequiredException(string message) : base(message) { }
     }
 }
