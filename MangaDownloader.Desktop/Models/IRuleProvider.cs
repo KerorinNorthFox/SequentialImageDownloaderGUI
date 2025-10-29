@@ -1,8 +1,9 @@
+using MangaDownloader.Rule;
 using System.Collections.Generic;
 
 namespace MangaDownloader.Desktop.Models
 {
-    public interface ISelectorProvider : IDictionary<string, SelectorMember>
+    public interface IRuleProvider : IDictionary<string, IRule>
     {
         void Load();
 

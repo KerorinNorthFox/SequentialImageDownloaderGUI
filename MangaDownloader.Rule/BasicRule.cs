@@ -6,13 +6,13 @@ namespace MangaDownloader.Rule
 {
     public class BasicRule : IDisposable, IRule
     {
-        private ISelectorMember _selector;
+        public ISelectorMember Selector;
 
         private IBrowsingContext _context = BrowsingContext.New(Configuration.Default.WithDefaultLoader());
 
         public BasicRule(ISelectorMember selector)
         {
-            _selector = selector;
+            Selector = selector;
         }
 
         public virtual async Task<IDocument> GetDocument(Uri pageUri)
@@ -33,12 +33,12 @@ namespace MangaDownloader.Rule
             int selectorIndex = 0;
             while (true)
             {
-                if (_selector.ImageSelectors.Count <= selectorIndex) // 候補セレクターを全て回したらbreak
+                if (Selector.ImageSelectors.Count <= selectorIndex) // 候補セレクターを全て回したらbreak
                 {
                     break;
                 }
 
-                string candidateSelector = _selector.ImageSelectors[selectorIndex];
+                string candidateSelector = Selector.ImageSelectors[selectorIndex];
                 candidateSelector = replaceSelector(candidateSelector, index, pageId);
 
                 IHtmlImageElement? imageElement = targetDoc.QuerySelector(candidateSelector) as IHtmlImageElement;
@@ -62,17 +62,17 @@ namespace MangaDownloader.Rule
         /// <returns></returns>
         protected virtual string replaceSelector(string candidateSelector, int index, string? pageId)
         {
-            return candidateSelector.Replace("xxxx", (_selector.StartNthChildIndex + index).ToString());
+            return candidateSelector.Replace("xxxx", (Selector.StartNthChildIndex + index).ToString());
         }
 
         public virtual string? GetTitle(IDocument targetDoc)
         {
-            return getTextContent(targetDoc, _selector.TitleSelector);
+            return getTextContent(targetDoc, Selector.TitleSelector);
         }
 
         public virtual string? GetAuthor(IDocument targetDoc)
         {
-            return getTextContent(targetDoc, _selector.AuthorSelector);
+            return getTextContent(targetDoc, Selector.AuthorSelector);
         }
 
         private string? getTextContent(IDocument targetDoc, string selector)

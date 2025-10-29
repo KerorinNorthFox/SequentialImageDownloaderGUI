@@ -1,20 +1,14 @@
-﻿using AngleSharp.Dom;
-using Avalonia.Media.Imaging;
+﻿using Avalonia.Media.Imaging;
+using MangaDownloader.Rule;
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MangaDownloader.Desktop.Models
 {
     public interface IImageDownloader
     {
-        Task<IDocument> GetDocument(Uri pagUri);
-
-        IEnumerable<Uri> ParsePageUri(IDocument targetDoc, Uri targetUri);
+        IRule MatchRule(string host);
 
         Task<Bitmap> DownloadImage(Uri imageUri);
-
-        Task<string> GetTitle(IDocument targetDoc, SelectorMember selector);
-
     }
 }

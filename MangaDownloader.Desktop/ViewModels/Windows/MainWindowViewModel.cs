@@ -1,5 +1,4 @@
 ﻿using MangaDownloader.Desktop.Models;
-using MangaDownloader.Desktop.Models.Config;
 using MangaDownloader.Desktop.Models.Events;
 using MangaDownloader.Desktop.Services;
 using System;

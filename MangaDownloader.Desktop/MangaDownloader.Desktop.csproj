@@ -35,4 +35,8 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\MangaDownloader.Rule\MangaDownloader.Rule.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Assets\Plugins\" />
+	</ItemGroup>
 </Project>
