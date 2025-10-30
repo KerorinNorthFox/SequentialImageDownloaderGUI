@@ -6,7 +6,7 @@ namespace MangaDownloader.Rule
 {
     public class BasicRule : IDisposable, IRule
     {
-        public ISelectorMember Selector;
+        public ISelectorMember Selector { get; }
 
         private IBrowsingContext _context = BrowsingContext.New(Configuration.Default.WithDefaultLoader());
 

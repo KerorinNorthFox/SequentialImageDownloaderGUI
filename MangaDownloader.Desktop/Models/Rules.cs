@@ -1,23 +1,16 @@
 ﻿using MangaDownloader.Desktop.Activator;
 using MangaDownloader.Rule;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MangaDownloader.Desktop.Models
 {
     public class Rules : Dictionary<string, IRule>, IRuleProvider
     {
-        private RuleActivator _activator;
-
         private Config _config;
 
         public Rules(Config config)
         {
             _config = config;
-            _activator = new RuleActivator(_config);
 
             Load();
         }
@@ -29,7 +22,11 @@ namespace MangaDownloader.Desktop.Models
 
         private void load()
         {
-
+            var rules = RuleActivator.LoadRules(_config.PluginPath);
+            foreach (var rule in rules)
+            {
+                this.Add(rule.Selector.Domain, rule);
+            }
         }
 
         public void Reload()

@@ -65,8 +65,9 @@ namespace MangaDownloader.Desktop.Services
         {
             manga.ChangeDownloadState(DownloadStatus.Downloading);
 
-            var doc = await _downloader.GetDocument(manga.Uri);
-            var imageUris = _downloader.ParsePageUri(doc, manga.Uri);
+            var rule = _downloader.MatchRule(manga.Uri.Host);
+            var doc = await rule.GetDocument(manga.Uri);
+            var imageUris = rule.ParsePageUri(doc, manga.Uri.Segments[^1]);
             _imageProgress.OnInitializeProgress(imageUris.ToList().Count);
             var imageDownloadTasks = imageUris.Select(async (uri, index) =>
             {

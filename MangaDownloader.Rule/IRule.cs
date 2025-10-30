@@ -4,6 +4,8 @@ namespace MangaDownloader.Rule
 {
     public interface IRule
     {
+        ISelectorMember Selector { get; }
+
         /// <summary>
         /// リクエストされたページのhtmlを取得
         /// </summary>

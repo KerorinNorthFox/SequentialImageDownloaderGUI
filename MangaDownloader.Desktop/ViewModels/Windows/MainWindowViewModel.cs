@@ -34,19 +34,8 @@ namespace MangaDownloader.Desktop.ViewModels
                     ProgressBarViewModel.ImageDownloadProgress.ResetProgress
                     );
 
-#if DEBUG
-            // Assetsファイルのパスを参照する
-            var baseDir = AppDomain.CurrentDomain.BaseDirectory; // \MangaDownloader\bin\Debug\new8.0
-            var projectRootDir = Directory.GetParent(baseDir)?.Parent?.Parent?.Parent?.FullName; // \MangaDownloder\
-            var jsonPath = Path.Combine(projectRootDir!, "Assets", "selector.json"); // \MangaDownloader\Assets\selector.json
-#else
-            // TODO :本番環境ではAppDataを参照する
-            //       AppDataにフォルダを作るコードを書く必要あり？
-            var jsonPath = selectorJsonPath;
-#endif
-
             var service = new MangaDownloadService(
-                new ImageDownloader(new Selectors(jsonPath)),
+                new ImageDownloader(_config),
                 _mangaDownloadProgressEvents,
                 _imageDownloadProgressEvents
                 );
