@@ -18,7 +18,7 @@ namespace MangaDownloader.Desktop
 
             if (type != null)
             {
-                var control = (Control)Activator.CreateInstance(type)!;
+                var control = (Control)System.Activator.CreateInstance(type)!;
                 control.DataContext = data;
                 return control;
             }
