@@ -7,7 +7,7 @@ namespace MangaDownloader.Desktop.Models
 {
     public interface IImageDownloader
     {
-        IRule MatchRule(string host);
+        IRule? MatchRule(string host);
 
         Task<Bitmap> DownloadImage(Uri imageUri);
     }

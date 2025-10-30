@@ -63,9 +63,15 @@ namespace MangaDownloader.Desktop.Services
 
         public async Task DownloadAsync(Manga manga)
         {
+            var rule = _downloader.MatchRule(manga.Uri.Host);
+            if (rule == null)
+            {
+                manga.ChangeDownloadState(DownloadStatus.Failed);
+                return;
+            }
+
             manga.ChangeDownloadState(DownloadStatus.Downloading);
 
-            var rule = _downloader.MatchRule(manga.Uri.Host);
             var doc = await rule.GetDocument(manga.Uri);
             var imageUris = rule.ParsePageUri(doc, manga.Uri.Segments[^1]);
             _imageProgress.OnInitializeProgress(imageUris.ToList().Count);

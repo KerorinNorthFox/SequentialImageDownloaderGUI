@@ -1,6 +1,8 @@
 ﻿using Avalonia.Media.Imaging;
 using MangaDownloader.Rule;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -17,9 +19,16 @@ namespace MangaDownloader.Desktop.Models
             _rules = rule;
         }
 
-        public IRule MatchRule(string host)
+        public IRule? MatchRule(string host)
         {
-            return _rules[host];
+            if (_rules.TryGetValue(host, out var rule))
+            {
+                return rule;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         public async Task<Bitmap> DownloadImage(Uri imageUri)
