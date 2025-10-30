@@ -1,8 +1,6 @@
 ﻿using MangaDownloader.Desktop.Models;
 using MangaDownloader.Desktop.Models.Events;
 using MangaDownloader.Desktop.Services;
-using System;
-using System.IO;
 
 namespace MangaDownloader.Desktop.ViewModels
 {
@@ -35,7 +33,7 @@ namespace MangaDownloader.Desktop.ViewModels
                     );
 
             var service = new MangaDownloadService(
-                new ImageDownloader(_config),
+                new ImageDownloader(new Rules(_config)),
                 _mangaDownloadProgressEvents,
                 _imageDownloadProgressEvents
                 );

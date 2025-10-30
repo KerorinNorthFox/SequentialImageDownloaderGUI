@@ -12,9 +12,9 @@ namespace MangaDownloader.Desktop.Models
 
         private IRuleProvider _rules;
 
-        public ImageDownloader(Config config)
+        public ImageDownloader(IRuleProvider rule)
         {
-            _rules = new Rules(config);
+            _rules = rule;
         }
 
         public IRule MatchRule(string host)
