@@ -6,11 +6,11 @@ namespace MangaDownloader.Desktop.Models
 {
     public class Rules : Dictionary<string, IRule>, IRuleProvider
     {
-        private Config _config;
+        private string _pluginPath;
 
-        public Rules(Config config)
+        public Rules(string pluginPath)
         {
-            _config = config;
+            _pluginPath = pluginPath;
 
             Load();
         }
@@ -22,7 +22,7 @@ namespace MangaDownloader.Desktop.Models
 
         private void load()
         {
-            var rules = RuleActivator.LoadRules(_config.PluginPath);
+            var rules = RuleActivator.LoadRules(_pluginPath);
             foreach (var rule in rules)
             {
                 this.Add(rule.Selector.Domain, rule);

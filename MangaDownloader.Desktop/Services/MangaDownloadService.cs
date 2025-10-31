@@ -13,7 +13,7 @@ namespace MangaDownloader.Desktop.Services
 {
     public class MangaDownloadService : IDownloadService
     {
-        private IImageDownloader _downloader;
+        private ImageDownloader _imageDownloader = new ImageDownloader();
 
         private IProgressEvents _mangaProgress;
 
@@ -34,9 +34,8 @@ namespace MangaDownloader.Desktop.Services
 
         private readonly Config _config;
 
-        public MangaDownloadService(IImageDownloader downloader, IRuleProvider rules, IProgressEvents mangaProgress, IProgressEvents imageProgress, Config config)
+        public MangaDownloadService(IRuleProvider rules, IProgressEvents mangaProgress, IProgressEvents imageProgress, Config config)
         {
-            _downloader = downloader;
             _rules = rules;
             _mangaProgress = mangaProgress;
             _imageProgress = imageProgress;
@@ -111,7 +110,7 @@ namespace MangaDownloader.Desktop.Services
                 await _imageDownloadSemaphore.WaitAsync();
                 try
                 {
-                    var image = await _downloader.DownloadImage(uri);
+                    var image = await _imageDownloader.Download(uri);
                     return new { Index = index, Uri = uri, Image = image };
                 }
                 catch (Exception e)

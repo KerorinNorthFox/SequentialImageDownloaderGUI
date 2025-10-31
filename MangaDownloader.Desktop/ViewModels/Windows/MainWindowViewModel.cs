@@ -33,8 +33,7 @@ namespace MangaDownloader.Desktop.ViewModels
                     );
 
             var service = new MangaDownloadService(
-                new ImageDownloader(),
-                new Rules(_config),
+                new Rules(_config.PluginPath),
                 _mangaDownloadProgressEvents,
                 _imageDownloadProgressEvents,
                 _config

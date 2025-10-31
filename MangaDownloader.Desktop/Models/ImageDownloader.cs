@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MangaDownloader.Desktop.Models
 {
-    public class ImageDownloader : IDisposable, IImageDownloader
+    public class ImageDownloader : IDisposable
     {
         private HttpClient _httpClient = new HttpClient();
 
@@ -13,7 +13,7 @@ namespace MangaDownloader.Desktop.Models
         {
         }
 
-        public async Task<Bitmap> DownloadImage(Uri imageUri)
+        public async Task<Bitmap> Download(Uri imageUri)
         {
             var res = await _httpClient.GetAsync(imageUri);
             if (!res.IsSuccessStatusCode)
