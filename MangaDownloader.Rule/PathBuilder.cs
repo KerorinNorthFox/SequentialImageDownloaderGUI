@@ -21,6 +21,15 @@ namespace MangaDownloader.Rule
             return this;
         }
 
+        public PathBuilder Append(string[] leaves)
+        {
+            foreach (var leaf in leaves)
+            {
+                _leaves.Add(leaf);
+            }
+            return this;
+        }
+
         /// <summary>
         /// 追加したleafを全て結合してパスにする
         /// </summary>
