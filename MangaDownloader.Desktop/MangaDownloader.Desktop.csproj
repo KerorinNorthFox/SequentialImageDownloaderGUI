@@ -27,16 +27,14 @@
 		<PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="11.1.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="IconPacks.Avalonia" Version="1.2.0" />
-		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 		<PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
-		<PackageReference Include="xunit" Version="2.9.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\MangaDownloader.Rule\MangaDownloader.Rule.csproj" />
+		<ProjectReference Include="..\MangaDownloader.Rule\MangaDownloader.Rule.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Assets\Plugins\" />
+		<Folder Include="Assets\Plugins\" />
 	</ItemGroup>
 </Project>
