@@ -7,7 +7,7 @@ namespace MangaDownloader.Desktop.Models
 {
     public class Manga : ReactiveObject, IDisposable
     {
-        public string? Title { get; set; }
+        public string Title { get; set; } = string.Empty;
 
         public Uri Uri { get; }
 
