@@ -14,8 +14,6 @@ namespace MangaDownloader.Desktop.ViewModels
 
         private DownloadProgressEvents _mangaDownloadProgressEvents;
 
-        private DownloadProgressEvents _imageDownloadProgressEvents;
-
         public MainWindowViewModel()
         {
             _config = new Config();
@@ -25,17 +23,10 @@ namespace MangaDownloader.Desktop.ViewModels
                     ProgressBarViewModel.MangaDownloadProgress.UpdateProgress,
                     ProgressBarViewModel.MangaDownloadProgress.ResetProgress
                     );
-            _imageDownloadProgressEvents = new DownloadProgressEvents()
-                .Subscribe(
-                    ProgressBarViewModel.ImageDownloadProgress.InitializeProgress,
-                    ProgressBarViewModel.ImageDownloadProgress.UpdateProgress,
-                    ProgressBarViewModel.ImageDownloadProgress.ResetProgress
-                    );
 
             var service = new MangaDownloadService(
                 new Rules(_config.PluginPath),
                 _mangaDownloadProgressEvents,
-                _imageDownloadProgressEvents,
                 _config
                 );
             TaskManageViewModel = new TaskManageViewModel(service);

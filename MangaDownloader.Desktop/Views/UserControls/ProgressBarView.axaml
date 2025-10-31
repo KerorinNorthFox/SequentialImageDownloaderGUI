@@ -10,19 +10,11 @@
 	<Border Padding="10, 0" Background="#007acc">
 		<StackPanel Orientation="Horizontal">
 			<Label FontSize="12" Content="Manga DL status" Foreground="WhiteSmoke"/>
-			<ProgressBar Foreground="Orange" Maximum="{Binding MangaDownloadProgress.Maximum}" Value="{Binding MangaDownloadProgress.Current}" />
-			<StackPanel Orientation="Horizontal" Margin="10, 0">
+			<ProgressBar Foreground="Orange" Maximum="{Binding MangaDownloadProgress.Maximum}" Value="{Binding MangaDownloadProgress.Current}" Margin="10, 0" />
+			<StackPanel Orientation="Horizontal">
 				<Label Content="{Binding MangaDownloadProgress.Current}" Foreground="WhiteSmoke"/>
 				<Label Content="/" Foreground="WhiteSmoke"/>
 				<Label Content="{Binding MangaDownloadProgress.Maximum}" Foreground="WhiteSmoke"/>
-			</StackPanel>
-
-			<Label Content="Image DL status" Foreground="WhiteSmoke"/>
-			<ProgressBar Foreground="Yellow" Maximum="{Binding ImageDownloadProgress.Maximum}" Value="{Binding ImageDownloadProgress.Current}" />
-			<StackPanel Orientation="Horizontal" Margin="10, 0">
-				<Label Content="{Binding ImageDownloadProgress.Current}" Foreground="WhiteSmoke"/>
-				<Label Content="/" Foreground="WhiteSmoke"/>
-				<Label Content="{Binding ImageDownloadProgress.Maximum}" Foreground="WhiteSmoke"/>
 			</StackPanel>
 		</StackPanel>
 	</Border>

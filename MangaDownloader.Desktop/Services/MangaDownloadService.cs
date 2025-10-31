@@ -17,8 +17,6 @@ namespace MangaDownloader.Desktop.Services
 
         private IProgressEvents _mangaProgress;
 
-        private IProgressEvents _imageProgress;
-
         private IRuleProvider _rules;
 
         private readonly int _maxConcurrentMangaDownloads = 10;
@@ -34,11 +32,10 @@ namespace MangaDownloader.Desktop.Services
 
         private readonly Config _config;
 
-        public MangaDownloadService(IRuleProvider rules, IProgressEvents mangaProgress, IProgressEvents imageProgress, Config config)
+        public MangaDownloadService(IRuleProvider rules, IProgressEvents mangaProgress, Config config)
         {
             _rules = rules;
             _mangaProgress = mangaProgress;
-            _imageProgress = imageProgress;
             _config = config;
             _mangaDownloadSemaphore = new SemaphoreSlim(_maxConcurrentMangaDownloads, _maxConcurrentMangaDownloads);
             _imageDownloadSemaphore = new SemaphoreSlim(_maxConcurrentImageDownloads, _maxConcurrentImageDownloads);
@@ -104,7 +101,6 @@ namespace MangaDownloader.Desktop.Services
             var title = rule.GetTitle(doc);
             var author = rule.GetAuthor(doc);
 
-            _imageProgress.OnInitializeProgress(imageUris.ToList().Count);
             var imageDownloadTasks = imageUris.Select(async (uri, index) =>
             {
                 await _imageDownloadSemaphore.WaitAsync();
@@ -120,7 +116,6 @@ namespace MangaDownloader.Desktop.Services
                 finally
                 {
                     _imageDownloadSemaphore.Release();
-                    _imageProgress.OnUpdateProgress(1);
                 }
             });
 
