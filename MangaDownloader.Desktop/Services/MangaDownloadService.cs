@@ -1,7 +1,10 @@
-﻿using MangaDownloader.Desktop.Models;
+﻿using AngleSharp.Dom;
+using MangaDownloader.Desktop.Models;
 using MangaDownloader.Desktop.Models.Events;
 using MangaDownloader.Rule;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -56,6 +59,8 @@ namespace MangaDownloader.Desktop.Services
                     }
                     catch (FailedDownloadException e)
                     {
+                        Debug.WriteLine(e.Message);
+                        // TODO: 失敗したことを伝えるメッセージボックスを表示.
                         manga.ChangeDownloadState(DownloadStatus.Failed);
                     }
                     finally
@@ -70,21 +75,37 @@ namespace MangaDownloader.Desktop.Services
 
         public async Task DownloadAsync(Manga manga)
         {
+            manga.ChangeDownloadState(DownloadStatus.Downloading);
+
             var rule = matchRule(manga.Uri.Host);
             if (rule == null)
             {
-                manga.ChangeDownloadState(DownloadStatus.Failed);
-                return;
+                throw new FailedDownloadException($"Rule is not found. Requires '{manga.Uri.Host}.dll' plugin.");
             }
 
-            manga.ChangeDownloadState(DownloadStatus.Downloading);
+            IDocument doc;
+            try
+            {
+                doc = await rule.GetDocument(manga.Uri);
+            }
+            catch (Exception e)
+            {
+                throw new FailedDownloadException($"Getting html document failed! >> {e.Message}");
+            }
 
-            var doc = await rule.GetDocument(manga.Uri);
-            var imageUris = rule.ParsePageUri(doc, manga.Uri.Segments[^1]);
+            IEnumerable<Uri> imageUris;
+            try
+            {
+                imageUris = rule.ParsePageUri(doc, manga.Uri.Segments[^1]);
+            }
+            catch (Exception e)
+            {
+                throw new FailedDownloadException($"Parse html failed! Fix selectors and replace {rule.Selector.Domain}.dll plugin. >> {e.Message}");
+            }
             var title = rule.GetTitle(doc);
             var author = rule.GetAuthor(doc);
-            _imageProgress.OnInitializeProgress(imageUris.ToList().Count);
 
+            _imageProgress.OnInitializeProgress(imageUris.ToList().Count);
             var imageDownloadTasks = imageUris.Select(async (uri, index) =>
             {
                 await _imageDownloadSemaphore.WaitAsync();
@@ -92,6 +113,10 @@ namespace MangaDownloader.Desktop.Services
                 {
                     var image = await _downloader.DownloadImage(uri);
                     return new { Index = index, Uri = uri, Image = image };
+                }
+                catch (Exception e)
+                {
+                    throw new FailedDownloadException(e.Message);
                 }
                 finally
                 {
@@ -107,6 +132,7 @@ namespace MangaDownloader.Desktop.Services
             }
 
             manga.SaveDir = rule.BuildSaveDirPath(_config.SaveBasePath, manga.Uri, title, author);
+            Debug.WriteLine(manga.SaveDir);
 
             manga.ChangeDownloadState(DownloadStatus.Finished);
         }

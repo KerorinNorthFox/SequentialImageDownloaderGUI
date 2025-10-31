@@ -24,7 +24,7 @@ namespace MangaDownloader.Rule
             }
             catch (Exception e)
             {
-                throw new Exception(e.Message);
+                throw new Exception($"Opening '${pageUri}' is failed!. >> {e.Message}");
             }
         }
 
@@ -78,7 +78,15 @@ namespace MangaDownloader.Rule
 
         protected virtual string? getTextContent(IDocument targetDoc, string selector)
         {
-            IHtmlElement? elem = targetDoc.QuerySelector(selector) as IHtmlElement;
+            IHtmlElement? elem;
+            try
+            {
+                elem = targetDoc.QuerySelector(selector) as IHtmlElement;
+            }
+            catch
+            {
+                return null;
+            }
             if (elem == null || elem.TextContent == null)
             {
                 return null;
