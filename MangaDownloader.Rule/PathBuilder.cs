@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,9 +21,20 @@ namespace MangaDownloader.Rule
             return this;
         }
 
+        /// <summary>
+        /// 追加したleafを全て結合してパスにする
+        /// </summary>
+        /// <param name="skips">スキップするleafのインデックス. 範囲外は削る</param>
+        /// <returns></returns>
         public string Build(params int[] skips)
         {
             string[] leaves = _leaves.ToArray();
+
+            if (leaves.Length <= skips.Length)
+            {
+                skips = skips[0..leaves.Length];
+            }
+
             if (skips.Length > 0)
             {
                 var unskippedLeaves = _leaves.Where((leaf, i) => !(skips.Contains(i)));
@@ -31,5 +43,4 @@ namespace MangaDownloader.Rule
             return Path.Combine(leaves);
         }
     }
-
 }
