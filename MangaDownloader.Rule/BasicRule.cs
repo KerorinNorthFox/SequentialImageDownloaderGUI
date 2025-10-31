@@ -1,6 +1,7 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
+using System;
 
 namespace MangaDownloader.Rule
 {
@@ -75,7 +76,7 @@ namespace MangaDownloader.Rule
             return getTextContent(targetDoc, Selector.AuthorSelector);
         }
 
-        private string? getTextContent(IDocument targetDoc, string selector)
+        protected virtual string? getTextContent(IDocument targetDoc, string selector)
         {
             IHtmlElement? elem = targetDoc.QuerySelector(selector) as IHtmlElement;
             if (elem == null || elem.TextContent == null)
@@ -83,6 +84,35 @@ namespace MangaDownloader.Rule
                 return null;
             }
             return elem.TextContent;
+        }
+
+        public string BuildSaveDirPath(string baseDir, Uri uri, string? title, string? author)
+        {
+            var builder = new PathBuilder()
+                .Append(baseDir)
+                .Append(uri.Host)
+                .Append(uri.Segments[1..^2].Select((value) => value.Trim('/')).ToArray());
+
+            if (author != null)
+            {
+                builder = builder.Append(author);
+            }
+
+            if (title != null)
+            {
+                builder = builder.Append(uri.Segments[^1]);
+            }
+            else
+            {
+                builder = builder.Append($"{title}_{uri.Segments[^1]}");
+            }
+
+            return buildPath(builder);
+        }
+
+        protected virtual string buildPath(PathBuilder builder)
+        {
+            return builder.Build();
         }
 
         public void Dispose()

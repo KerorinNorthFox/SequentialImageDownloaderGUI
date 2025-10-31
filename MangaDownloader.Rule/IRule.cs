@@ -24,5 +24,7 @@ namespace MangaDownloader.Rule
         string? GetTitle(IDocument targetDoc);
 
         string? GetAuthor(IDocument targetDoc);
+
+        string BuildSaveDirPath(string baseDir, Uri uri, string? title, string? author);
     }
 }
