@@ -91,7 +91,7 @@ namespace MangaDownloader.Rule
             var builder = new PathBuilder()
                 .Append(baseDir)
                 .Append(uri.Host)
-                .Append(uri.Segments[1..^2].Select((value) => value.Trim('/')).ToArray());
+                .Append(uri.Segments[1..^1].Select((value) => value.Trim('/')).ToArray());
 
             if (author != null)
             {
@@ -100,11 +100,11 @@ namespace MangaDownloader.Rule
 
             if (title != null)
             {
-                builder = builder.Append(uri.Segments[^1]);
+                builder = builder.Append($"{title}_{uri.Segments[^1]}");
             }
             else
             {
-                builder = builder.Append($"{title}_{uri.Segments[^1]}");
+                builder = builder.Append(uri.Segments[^1]);
             }
 
             return buildPath(builder);
