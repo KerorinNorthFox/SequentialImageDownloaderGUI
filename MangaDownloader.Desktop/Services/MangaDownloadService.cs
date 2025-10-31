@@ -1,5 +1,6 @@
 ﻿using MangaDownloader.Desktop.Models;
 using MangaDownloader.Desktop.Models.Events;
+using MangaDownloader.Rule;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -15,6 +16,8 @@ namespace MangaDownloader.Desktop.Services
 
         private IProgressEvents _imageProgress;
 
+        private IRuleProvider _rules;
+
         private readonly int _maxConcurrentMangaDownloads = 10;
 
         private readonly SemaphoreSlim _mangaDownloadSemaphore;
@@ -26,20 +29,24 @@ namespace MangaDownloader.Desktop.Services
 
         private readonly SemaphoreSlim _imageDownloadSemaphore;
 
-        public MangaDownloadService(IImageDownloader downloader, IProgressEvents mangaProgress, IProgressEvents imageProgress)
+        private readonly Config _config;
+
+        public MangaDownloadService(IImageDownloader downloader, IRuleProvider rules, IProgressEvents mangaProgress, IProgressEvents imageProgress, Config config)
         {
             _downloader = downloader;
+            _rules = rules;
             _mangaProgress = mangaProgress;
             _imageProgress = imageProgress;
+            _config = config;
             _mangaDownloadSemaphore = new SemaphoreSlim(_maxConcurrentMangaDownloads, _maxConcurrentMangaDownloads);
             _imageDownloadSemaphore = new SemaphoreSlim(_maxConcurrentImageDownloads, _maxConcurrentImageDownloads);
         }
 
         public async Task DownloadAllAsync(IEnumerable<Manga> mangaList)
         {
-            var mangaCount = mangaList.ToList().Count;
-            _mangaProgress.OnInitializeProgress(mangaCount);
-            var downloadTasks = mangaList.Where(m => m.State == DownloadStatus.Pending || m.State == DownloadStatus.Failed)
+            _mangaProgress.OnInitializeProgress(mangaList.ToList().Count);
+            var downloadTasks = mangaList
+                .Where(m => m.State == DownloadStatus.Pending || m.State == DownloadStatus.Failed)
                 .Select(async manga =>
                 {
                     await _mangaDownloadSemaphore.WaitAsync();
@@ -63,7 +70,7 @@ namespace MangaDownloader.Desktop.Services
 
         public async Task DownloadAsync(Manga manga)
         {
-            var rule = _downloader.MatchRule(manga.Uri.Host);
+            var rule = matchRule(manga.Uri.Host);
             if (rule == null)
             {
                 manga.ChangeDownloadState(DownloadStatus.Failed);
@@ -74,7 +81,10 @@ namespace MangaDownloader.Desktop.Services
 
             var doc = await rule.GetDocument(manga.Uri);
             var imageUris = rule.ParsePageUri(doc, manga.Uri.Segments[^1]);
+            var title = rule.GetTitle(doc);
+            var author = rule.GetAuthor(doc);
             _imageProgress.OnInitializeProgress(imageUris.ToList().Count);
+
             var imageDownloadTasks = imageUris.Select(async (uri, index) =>
             {
                 await _imageDownloadSemaphore.WaitAsync();
@@ -89,14 +99,28 @@ namespace MangaDownloader.Desktop.Services
                     _imageProgress.OnUpdateProgress(1);
                 }
             });
+
             var results = await Task.WhenAll(imageDownloadTasks);
             foreach (var result in results)
             {
                 manga.AddPageByIndex(result.Index, result.Uri, result.Image);
             }
 
+            manga.SaveDir = rule.BuildSaveDirPath(_config.SaveBasePath, manga.Uri, title, author);
+
             manga.ChangeDownloadState(DownloadStatus.Finished);
         }
 
+        private IRule? matchRule(string host)
+        {
+            if (_rules.TryGetValue(host, out var rule))
+            {
+                return rule;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

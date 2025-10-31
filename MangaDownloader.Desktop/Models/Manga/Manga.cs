@@ -7,7 +7,7 @@ namespace MangaDownloader.Desktop.Models
 {
     public class Manga : ReactiveObject, IDisposable
     {
-        public string Title { get; set; } = string.Empty;
+        public string? Title { get; set; }
 
         public Uri Uri { get; }
 
@@ -16,6 +16,8 @@ namespace MangaDownloader.Desktop.Models
         public string? AuthorCircleName { get; set; }
 
         public Dictionary<int, Page> Pages { get; private set; } = new Dictionary<int, Page>();
+
+        public string? SaveDir;
 
         private DownloadStatus _state = DownloadStatus.Pending;
 

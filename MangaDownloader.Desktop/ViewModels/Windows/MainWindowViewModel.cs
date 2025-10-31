@@ -33,9 +33,11 @@ namespace MangaDownloader.Desktop.ViewModels
                     );
 
             var service = new MangaDownloadService(
-                new ImageDownloader(new Rules(_config)),
+                new ImageDownloader(),
+                new Rules(_config),
                 _mangaDownloadProgressEvents,
-                _imageDownloadProgressEvents
+                _imageDownloadProgressEvents,
+                _config
                 );
             TaskManageViewModel = new TaskManageViewModel(service);
         }
