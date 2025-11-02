@@ -33,7 +33,7 @@
 			</MenuItem>
 		</Menu>
 
-		<views:ProgressBarView DockPanel.Dock="Bottom" />
+		<views:ProgressBarView DockPanel.Dock="Bottom" DataContext="{Binding ProgressBarViewModel}" />
 
 		<Grid>
 			<Grid.ColumnDefinitions>
